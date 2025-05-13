@@ -34,6 +34,18 @@ class DeleteQuery(RecordQuery):
         self.returning = list(args) if args else None
         return self
 
+    def HAVING(self, *args, **kwargs) -> "DeleteQuery":
+        raise NotImplementedError("HAVING clause is not supported in DELETE queries.")
+    
+    def ORDER_BY(self, *args, **kwargs) -> "DeleteQuery":
+        raise NotImplementedError("ORDER BY clause is not supported in DELETE queries.")
+    
+    def LIMIT(self, *args, **kwargs) -> "DeleteQuery":
+        raise NotImplementedError("LIMIT clause is not supported in DELETE queries.")
+    
+    def OFFSET(self, *args, **kwargs) -> "DeleteQuery":
+        raise NotImplementedError("OFFSET clause is not supported in DELETE queries.")
+
     def placeholder_pair(self, *args, **kwarfs) -> Tuple[str, List[Any]]:
         return build_delete_query(
             table_name=self.table_name,

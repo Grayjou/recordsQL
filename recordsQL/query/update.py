@@ -121,6 +121,30 @@ class UpdateQuery(RecordQuery):
             self.returning = args
         self.returning = list(args)
         return self
+    def HAVING(self, *args, **kwargs) -> None:
+        raise NotImplementedError("HAVING clause is not supported in DELETE queries.")
+    
+    def ORDER_BY(self, *args, **kwargs) -> None:
+        raise NotImplementedError("ORDER BY clause is not supported in DELETE queries.")
+    
+    def LIMIT(self, *args, **kwargs) -> None:
+        raise NotImplementedError("LIMIT clause is not supported in DELETE queries.")
+    
+    def OFFSET(self, *args, **kwargs) -> None:
+        raise NotImplementedError("OFFSET clause is not supported in DELETE queries.")
+    
+    
+    def UPDATE(self, table_name: str) -> "UpdateQuery":
+        """
+        Sets the table name for the UPDATE query.
+        """
+        self.table_name = table_name
+        return self
+
+    FROM = UPDATE  # Alias for FROM method
+    UPDATE_TABLE = UPDATE  # Alias for UPDATE_TABLE method
+    TABLE = UPDATE  # Alias for TABLE method
+
     def placeholder_pair(self) -> Tuple[str, List[Any]]:
         """
         Builds the UPDATE SQL query and placeholder values.

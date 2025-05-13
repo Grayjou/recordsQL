@@ -35,6 +35,25 @@ class ExistsQuery(RecordQuery):
     def HAVING(self, having: Optional[SQLCondition]) -> "ExistsQuery":
         self.having = having
         return self
+    
+    def EXISTS_IN(self, table_name: str) -> "ExistsQuery":
+        self.table_name = table_name
+        return self
+
+    IN = EXISTS_IN
+
+    def SET(self, *args, **kwargs) -> None:
+        raise NotImplementedError("SET clause is not supported in EXISTS queries.")
+    
+    def ORDER_BY(self, *args, **kwargs) -> None:
+        raise NotImplementedError("ORDER BY clause is not supported in EXISTS queries.")
+    
+    def LIMIT(self, *args, **kwargs) -> None:
+        raise NotImplementedError("LIMIT clause is not supported in EXISTS queries.")
+    
+    def OFFSET(self, *args, **kwargs) -> None:
+        raise NotImplementedError("OFFSET clause is not supported in EXISTS queries.")
+    
 
     def placeholder_pair(self) -> Tuple[str, List[Any]]:
         return build_exists_query(

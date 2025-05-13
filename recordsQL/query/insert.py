@@ -6,8 +6,8 @@ from ..types import SQLInput
 from ..raw_querybuilders import build_insert_query, OnConflictQuery
 from typing import List, Union, Iterable
 from ..types import SQLCol, SQLOrderBy
-from .utils import validate_monolist, normalize_args
-
+from .utils import validate_monolist, normalize_args, is_pair, get_col_value
+from ..validators import validate_name
 class InsertQuery(RecordQuery):
     name = "INSERT"
     def __init__(self, into: str = None, columns: List[str] = None, values: List[SQLInput] = None,
@@ -21,7 +21,7 @@ class InsertQuery(RecordQuery):
         self.on_conflict = on_conflict
         self.returning = returning
         super().__init__(table_name=table_name, validate_table_name= not ignore_forbidden_chars)
-
+        self.ignore_forbidden_characters = ignore_forbidden_chars
     @property
     def bulk(self) -> bool:
         if self.values is None:
@@ -79,6 +79,28 @@ class InsertQuery(RecordQuery):
         validate_monolist(*columns, monotype=SQLCol)
         self.returning = list(columns)
         return self
+    @normalize_args(skip=1)
+    def SET(self, *args, **kwargs) -> None:
+        collected_cols = []
+        collected_values = []
+        for arg in args:
+            if isinstance(arg, dict):
+                collected_cols.extend(arg.keys())
+                collected_values.extend(arg.values())
+            elif is_pair(arg):
+                k, v = arg
+                collected_cols.append(k)
+                collected_values.append(v)
+            else:
+                raise ValueError("SET accepts dicts or (col_name, value) pairs.")
+        if not self.ignore_forbidden_characters:
+            for col_key in collected_cols:
+                col_key = get_col_value(col_key)
+                validate_name(col_key, validate_chars=True)
+        self.columns = list(collected_cols)
+        self.values = list(collected_values)
+        return self
+
     def placeholder_pair(self):
 
         placeholder_query, injections = build_insert_query(

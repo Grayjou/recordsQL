@@ -232,6 +232,15 @@ class SelectQuery(RecordQuery):
     def HAVING(self, having: Optional[SQLCondition] = None):
             self.having = having
             return self
+    
+    def SET(self, *args, **kwargs) -> None:
+        raise NotImplementedError("SET clause is not applicable for SELECT queries.")
+    def VALUES(self, *args, **kwargs) -> None:
+        raise NotImplementedError("VALUES clause is not applicable for SELECT queries.")
+    
+    
+
+
     def _placeholder_pair(self) -> tuple[str, Any]:
         """
         Returns a placeholder pair for the query.

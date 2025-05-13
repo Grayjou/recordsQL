@@ -47,6 +47,19 @@ class CountQuery(RecordQuery):
             having=self.having,
             ignore_forbidden_chars=self.ignore_forbidden_characters,
         )
+    
+    def SET(self, *args, **kwargs) -> None:
+        raise NotImplementedError("SET clause is not supported in COUNT queries.")
+    
+    def ORDER_BY(self, *args, **kwargs) -> None:
+        raise NotImplementedError("ORDER BY clause is not supported in COUNT queries.")
+    
+    def LIMIT(self, *args, **kwargs) -> None:
+        raise NotImplementedError("LIMIT clause is not supported in COUNT queries.")
+    
+    def OFFSET(self, *args, **kwargs) -> None:
+        raise NotImplementedError("OFFSET clause is not supported in COUNT queries.")
+
 
     def __repr__(self):
         return f"CountQuery(table={self.table_name}, where={self.condition}, group_by={self.group_by}, having={self.having})"
