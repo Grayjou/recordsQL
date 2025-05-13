@@ -6,6 +6,7 @@ from functools import wraps
 from inspect import signature
 from .types import SQLCol
 from typing import Any, Union, Iterable, Callable, List
+from .dependencies import SQLExpression
 def validate_table_name(func, table_name_position: int = 0, *,
     validate_chars: bool = True, 
     validate_words: bool = True, 
@@ -169,6 +170,14 @@ def validate_name(
     forgiven_chars = set(),
     allow_digit: bool = False,
 ) -> None:
+    
+
+    if isinstance(name, SQLExpression) and name.expression_type == "query":
+        if getattr(name, "skip_validation", False):
+            raise AttributeError("Conflicting attribute: skip_validation at validate_name")
+        if getattr(name, "ignore_forbidden_chars", False):
+            raise AttributeError("Conflicting attribute: ignore_forbidden_chars at validate_name")
+        return
     if not isinstance(name, str):
         raise TypeError("Name must be a string.")
 

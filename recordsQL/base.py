@@ -54,3 +54,13 @@ class RecordQuery(SQLExpression):
         raise NotImplementedError("Subclasses must implement this method.")
     def copy_with(self, **kwargs):
         raise NotImplementedError("Subclasses must implement this method.")    
+    def __getattr__(self, name):
+        """
+        Get an attribute of the query builder.
+        Args:
+            name (str): The name of the attribute.
+        Returns:
+            Any: The value of the attribute.
+        """
+        #Override the __getattr__ method to handle dynamic attribute access in SQLExpression
+        raise AttributeError(f"{name} not found in {self.__class__.__name__}")
