@@ -74,6 +74,7 @@ print(*with_query.placeholder_pair(), sep="\n")
 
 WITH customer_data AS (SELECT name, age, email, total_purchases FROM "customers" WHERE ((signup_date-CURRENT_TIMESTAMP) > DATETIME(?)) AND (total_purchases > ?) AND (infractions = ?) ORDER BY total_purchases DESC, (signup_date-CURRENT_TIMESTAMP) ASC LIMIT 10 OFFSET 1) SELECT name, age, email, total_purchases FROM "customer_data" INNER JOIN "prices" 
 ON ? = store_id LEFT JOIN "orders" ON ? = store_id WHERE (total_purchases > ?) AND (infractions = ?) ORDER BY total_purchases DESC LIMIT 10 OFFSET 1
+
 ['1 year', 1000, 0, 1000, 0, 1275682, 1275682]
 
 </details>
