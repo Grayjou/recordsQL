@@ -1,5 +1,6 @@
 """Tests for UPDATE queries"""
 import pytest
+from expressql import set_expr
 from recordsQL import UPDATE, col, cols
 
 
@@ -93,7 +94,15 @@ class TestUpdateAdvanced:
 
     def test_update_increment_value(self):
         """Test UPDATE with expression (increment) - skipped, set_expr API unclear"""
-        pytest.skip("set_expr API needs investigation")
+        """This was a misunderstanding, set_expr is for IN SET clause, not for expressions in WHERE."""
+        values = set_expr((1,2,3))
+        query = UPDATE("counters").SET(count=col("count") + 1).WHERE(col("id").isin(values))
+        sql, params = query.placeholder_pair()
+        assert 'UPDATE "counters"' in sql
+        assert "(?, ?, ?)" in sql
+        assert 1 in params
+        assert 2 in params
+        assert 3 in params
 
     def test_update_with_numeric_condition(self):
         """Test UPDATE with numeric conditions"""
@@ -135,8 +144,14 @@ class TestUpdateAdvanced:
         assert 10 in params
 
     def test_update_null_value(self):
-        """Test UPDATE with NULL value - skipped due to expressQL limitation"""
-        pytest.skip("NULL values not currently supported by expressQL")
+        """Test UPDATE with NULL value"""
+        query = UPDATE("users").SET(last_login=None).WHERE(col("email") == None)
+        sql, params = query.placeholder_pair()
+        assert 'UPDATE "users"' in sql
+        assert "last_login = ?" in sql
+        assert None in params
+        assert "email IS NULL" in sql
+        assert None in params
 
     def test_update_with_returning_all(self):
         """Test UPDATE with RETURNING *"""

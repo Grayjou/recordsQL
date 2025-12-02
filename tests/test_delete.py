@@ -98,8 +98,12 @@ class TestDeleteAdvanced:
         assert "discontinued" in params
 
     def test_delete_with_null_check(self):
-        """Test DELETE with NULL check - skipped due to expressQL limitation"""
-        pytest.skip("NULL comparison not currently supported by expressQL")
+        # no longer unsupported
+        """Test DELETE with NULL check"""
+        query = DELETE().FROM("users").WHERE(col("last_login") == None)
+        sql, params = query.placeholder_pair()
+        assert 'DELETE FROM "users"' in sql
+        assert "WHERE" in sql
 
     def test_delete_with_not_equal(self):
         """Test DELETE with not equal condition"""

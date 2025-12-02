@@ -126,9 +126,12 @@ class TestExistsAdvanced:
         assert 100 in params
 
     def test_exists_with_null_check(self):
-        """Test EXISTS with NULL check - skipped due to expressQL limitation"""
-        pytest.skip("NULL comparison not currently supported by expressQL")
-
+        """Test EXISTS with NULL check - skipped due to expressql limitation"""
+        """No longer unsuported"""
+        query = EXISTS().FROM("users").WHERE(col("last_login") == None)
+        sql, params = query.placeholder_pair()
+        assert "EXISTS" in sql
+        assert "WHERE" in sql
     def test_exists_with_greater_than_or_equal(self):
         """Test EXISTS with greater than or equal condition"""
         score = col("score")
