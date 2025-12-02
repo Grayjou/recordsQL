@@ -13,6 +13,7 @@ from .types import (
 )
 
 from .dependencies import cols, col, text, set_expr, num
+
 __all__ = [
     "SELECT",
     "WITH",
@@ -29,5 +30,13 @@ __all__ = [
     "CountQuery",
     "COUNT",
     "ExistsQuery",
-    "EXISTS"
+    "EXISTS",
+    "SQLCol",
+    "SQLInput",
+    "SQLOrderBy",
+    "cols",
+    "col",
+    "text",
+    "set_expr",
+    "num"
 ]
