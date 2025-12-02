@@ -1,33 +1,52 @@
 from .query import (
-    SELECT, WITH, SelectQuery, WithQuery, JoinQuery,
-    UPDATE, UpdateQuery,
-    DELETE, DeleteQuery,
-    INSERT, InsertQuery, OnConflictQuery,
-    COUNT, CountQuery,
-    EXISTS, ExistsQuery
+    SELECT,
+    WITH,
+    SelectQuery,
+    WithQuery,
+    JoinQuery,
+    UPDATE,
+    UpdateQuery,
+    DELETE,
+    DeleteQuery,
+    INSERT,
+    InsertQuery,
+    OnConflictQuery,
+    COUNT,
+    CountQuery,
+    EXISTS,
+    ExistsQuery,
 )
-from .types import (
-    SQLCol,
-    SQLInput,
-    SQLOrderBy
-)
+from .types import SQLCol, SQLInput, SQLOrderBy
 
 from .dependencies import cols, col, text, set_expr, num
+
 __all__ = [
+    # Query builders
     "SELECT",
-    "WITH",
     "SelectQuery",
-    "WithQuery",
-    "JoinQuery",
-    "InsertQuery",
     "INSERT",
-    "OnConflictQuery",
-    "UpdateQuery",
+    "InsertQuery",
     "UPDATE",
-    "DeleteQuery",
+    "UpdateQuery",
     "DELETE",
-    "CountQuery",
+    "DeleteQuery",
     "COUNT",
+    "CountQuery",
+    "EXISTS",
     "ExistsQuery",
-    "EXISTS"
+    "WITH",
+    "WithQuery",
+    # Special query types
+    "JoinQuery",
+    "OnConflictQuery",
+    # Type definitions
+    "SQLCol",
+    "SQLInput",
+    "SQLOrderBy",
+    # Utility functions
+    "cols",
+    "col",
+    "text",
+    "set_expr",
+    "num",
 ]

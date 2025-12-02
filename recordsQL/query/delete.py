@@ -16,9 +16,19 @@ class DeleteQuery(RecordQuery):
         returning: Optional[List[SQLCol]] = None,
         ignore_forbidden_characters: bool = False,
     ):
-        super().__init__(table_name=table_name, validate_table_name=not ignore_forbidden_characters)
-        self.condition = condition if isinstance(condition, SQLCondition) else no_condition
-        self.returning = returning if isinstance(returning, list) else [returning] if returning else None
+        super().__init__(
+            table_name=table_name, validate_table_name=not ignore_forbidden_characters
+        )
+        self.condition = (
+            condition if isinstance(condition, SQLCondition) else no_condition
+        )
+        self.returning = (
+            returning
+            if isinstance(returning, list)
+            else [returning]
+            if returning
+            else None
+        )
         self.ignore_forbidden_characters = ignore_forbidden_characters
 
     def WHERE(self, condition: SQLCondition) -> "DeleteQuery":
@@ -26,9 +36,11 @@ class DeleteQuery(RecordQuery):
             raise TypeError("Condition must be an SQLCondition.")
         self.condition = condition
         return self
+
     def FROM(self, table_name: str) -> "DeleteQuery":
         self.table_name = table_name
         return self
+
     @normalize_args(skip=1)
     def RETURNING(self, *args: SQLCol) -> "DeleteQuery":
         self.returning = list(args) if args else None
@@ -36,13 +48,13 @@ class DeleteQuery(RecordQuery):
 
     def HAVING(self, *args, **kwargs) -> "DeleteQuery":
         raise NotImplementedError("HAVING clause is not supported in DELETE queries.")
-    
+
     def ORDER_BY(self, *args, **kwargs) -> "DeleteQuery":
         raise NotImplementedError("ORDER BY clause is not supported in DELETE queries.")
-    
+
     def LIMIT(self, *args, **kwargs) -> "DeleteQuery":
         raise NotImplementedError("LIMIT clause is not supported in DELETE queries.")
-    
+
     def OFFSET(self, *args, **kwargs) -> "DeleteQuery":
         raise NotImplementedError("OFFSET clause is not supported in DELETE queries.")
 
@@ -58,5 +70,9 @@ class DeleteQuery(RecordQuery):
         return f"DeleteQuery(table={self.table_name}, where={self.condition}, returning={self.returning})"
 
 
-def DELETE(table_name: str=None, ignore_forbidden_characters: bool = False) -> DeleteQuery:
-    return DeleteQuery(table_name=table_name, ignore_forbidden_characters=ignore_forbidden_characters)
+def DELETE(
+    table_name: str = None, ignore_forbidden_characters: bool = False
+) -> DeleteQuery:
+    return DeleteQuery(
+        table_name=table_name, ignore_forbidden_characters=ignore_forbidden_characters
+    )

@@ -5,13 +5,10 @@ from ..raw_querybuilders.formatters import SQLOrderBy, column_string
 from typing import List, Optional, Union, Any, Iterable
 from ..base import RecordQuery
 from ..types import SQLCol
-from ..dependencies import SQLCondition, no_condition, SQLExpression 
+from ..dependencies import SQLCondition, no_condition, SQLExpression
 from ..validators import validate_name, validate_table_name
 from .utils import normalize_args, enlist
 from ..utils import ensure_bracketed
-
-
-
 
 
 class SelectQuery(RecordQuery):
@@ -30,7 +27,7 @@ class SelectQuery(RecordQuery):
         ignore_forbidden_chars: bool = False,
         alias: Optional[str] = None,
         joins: List[Any] = None,
-        withs: Optional[List[Any]] = None
+        withs: Optional[List[Any]] = None,
     ) -> None:
         self._initialized = False  # Block __setattr__ during init
 
@@ -67,26 +64,36 @@ class SelectQuery(RecordQuery):
             expression_value=None,
             expression_type="query",
             positive=True,
-            inverted=False
+            inverted=False,
         )
-        self._initialized = True  
+        self._initialized = True
 
         # Call parent constructor last to avoid premature tracking
-        
+
     def __setattr__(self, name: str, value: Any) -> None:
-        if getattr(self, '_initialized', False):
+        if getattr(self, "_initialized", False):
             self._on_attribute_change(name, value)
         super().__setattr__(name, value)
 
     def _on_attribute_change(self, attribute: str, value: Any) -> None:
         tracked = {
-            "columns", "table_name", "condition", "order_by",
-            "criteria", "limit", "offset", "group_by", "having",
-            "joins", "withs", "alias"
+            "columns",
+            "table_name",
+            "condition",
+            "order_by",
+            "criteria",
+            "limit",
+            "offset",
+            "group_by",
+            "having",
+            "joins",
+            "withs",
+            "alias",
         }
-        
+
         if attribute in tracked:
             self._up_to_date = False
+
     @property
     def criteria(self) -> List[str]:
         """
@@ -95,6 +102,7 @@ class SelectQuery(RecordQuery):
             List[str]: The sorting criteria, either "ASC" or "DESC".
         """
         return self._criteria if self._criteria else None
+
     @criteria.setter
     def criteria(self, value: List[str]) -> None:
         """
@@ -108,6 +116,7 @@ class SelectQuery(RecordQuery):
             raise ValueError("criteria must be a list of 'ASC' or 'DESC'")
         else:
             self._criteria = value
+
     @property
     def joins(self) -> List[JoinQuery]:
         """
@@ -116,6 +125,7 @@ class SelectQuery(RecordQuery):
             List[JoinQuery]: The list of joins.
         """
         return self._joins
+
     @joins.setter
     def joins(self, value: List[JoinQuery]) -> None:
         """
@@ -126,6 +136,7 @@ class SelectQuery(RecordQuery):
         value = enlist(value)
         self.validate_join_list(value)
         self._joins = value or []
+
     @property
     def alias(self) -> Optional[str]:
         """
@@ -134,6 +145,7 @@ class SelectQuery(RecordQuery):
             Optional[str]: The alias of the query.
         """
         return self._alias
+
     @alias.setter
     def alias(self, value: Optional[str]) -> None:
         """
@@ -143,7 +155,7 @@ class SelectQuery(RecordQuery):
         """
         if value is not None:
             if isinstance(value, SQLExpression):
-                 value = value.expression_value
+                value = value.expression_value
             validate_name(value, validate_chars=not self.ignore_forbidden_chars)
         self._alias = value
 
@@ -155,6 +167,7 @@ class SelectQuery(RecordQuery):
             List[WithQuery]: The list of withs.
         """
         return self._withs
+
     @withs.setter
     def withs(self, value: List[WithQuery]) -> None:
         """
@@ -165,6 +178,7 @@ class SelectQuery(RecordQuery):
         value = enlist(value)
         self.validate_with_list(value)
         self._withs = value or []
+
     def _add_join(self, join: JoinQuery) -> None:
         """
         Adds a join to the list of joins.
@@ -174,7 +188,8 @@ class SelectQuery(RecordQuery):
         my_joins = self.joins
         self.joins.append(join)
         self.joins = my_joins
-    @normalize_args(skip = 1)
+
+    @normalize_args(skip=1)
     def SELECT(self, *columns: SQLCol) -> SelectQuery:
         """
         Sets the columns to select.
@@ -185,61 +200,66 @@ class SelectQuery(RecordQuery):
         """
         self.columns = list(columns)  # enforce normalized form
         return self
-    def FROM(self, table_name:str = None):
-            self.table_name = table_name
-            return self
-    def WHERE(self, condition:SQLCondition = no_condition):
-            self.condition = condition
-            return self
+
+    def FROM(self, table_name: str = None):
+        self.table_name = table_name
+        return self
+
+    def WHERE(self, condition: SQLCondition = no_condition):
+        self.condition = condition
+        return self
+
     def ORDER_BY(self, *items: Union[SQLOrderBy, List[SQLOrderBy]]):
-            if not items:
-                self.order_by = None
-                self.criteria = None
-                return self
-            collected_order_by = []
-            collected_criteria = []
-            for item in items:
-                if isinstance(item, (list, tuple)) and len(item) == 2:
-                    collected_order_by.append(item[0])
-                    collected_criteria.append(item[1])
-                elif isinstance(item, str):
-                    if item.upper() in ["ASC", "DESC"]:
-                        collected_criteria.append(item.upper())
-                    else:
-                        collected_order_by.append(item)
-                elif isinstance(item, SQLOrderBy):
+        if not items:
+            self.order_by = None
+            self.criteria = None
+            return self
+        collected_order_by = []
+        collected_criteria = []
+        for item in items:
+            if isinstance(item, (list, tuple)) and len(item) == 2:
+                collected_order_by.append(item[0])
+                collected_criteria.append(item[1])
+            elif isinstance(item, str):
+                if item.upper() in ["ASC", "DESC"]:
+                    collected_criteria.append(item.upper())
+                else:
                     collected_order_by.append(item)
-            ob_len = len(collected_order_by)
-            if ob_len == 0:
-                return self
-            for _ in range(len(collected_criteria), ob_len):
-                collected_criteria.append("DESC")
-            collected_criteria = collected_criteria[:ob_len]
-            self.order_by = collected_order_by
-            self.criteria = collected_criteria
+            elif isinstance(item, SQLOrderBy):
+                collected_order_by.append(item)
+        ob_len = len(collected_order_by)
+        if ob_len == 0:
             return self
-    def LIMIT(self, limit:Optional[Union[int, str]] = None):
-            self.limit = limit
-            return self
-    def OFFSET(self, offset:Optional[Union[int, str]] = None):
-            self.offset = offset
-            return self
+        for _ in range(len(collected_criteria), ob_len):
+            collected_criteria.append("DESC")
+        collected_criteria = collected_criteria[:ob_len]
+        self.order_by = collected_order_by
+        self.criteria = collected_criteria
+        return self
+
+    def LIMIT(self, limit: Optional[Union[int, str]] = None):
+        self.limit = limit
+        return self
+
+    def OFFSET(self, offset: Optional[Union[int, str]] = None):
+        self.offset = offset
+        return self
+
     def GROUP_BY(self, group_by: Union[SQLCol, list[SQLCol], None] = None):
-            if not isinstance(group_by, (SQLCol, list, tuple)):
-                raise TypeError("group_by must be an instance of SQLCol or list")
-            self.group_by = group_by
-            return self
+        if not isinstance(group_by, (SQLCol, list, tuple)):
+            raise TypeError("group_by must be an instance of SQLCol or list")
+        self.group_by = group_by
+        return self
+
     def HAVING(self, having: Optional[SQLCondition] = None):
-            self.having = having
-            return self
-    
+        self.having = having
+        return self
+
     def SET(self, *args, **kwargs) -> None:
         raise NotImplementedError("SET clause is not applicable for SELECT queries.")
+
     def VALUES(self, *args, **kwargs) -> None:
         raise NotImplementedError("VALUES clause is not applicable for SELECT queries.")
-    
-    
-
 
     def _placeholder_pair(self) -> tuple[str, Any]:
         """
@@ -260,7 +280,7 @@ class SelectQuery(RecordQuery):
             joins=self.joins,
             ignore_forbidden_chars=self.ignore_forbidden_chars,
         )
-        
+
         if self.withs:
             first, first_params = self.withs[0].placeholder_pair(include_with=True)
             withs = [first]
@@ -274,6 +294,7 @@ class SelectQuery(RecordQuery):
             string = f"{withs}{string}"
             params = with_params + params
         return string, params
+
     def placeholder_pair(self, include_alias: bool = True) -> tuple[str, Any]:
         """
         Returns a placeholder pair for the query.
@@ -283,7 +304,10 @@ class SelectQuery(RecordQuery):
             tuple[str, Any]: A tuple containing the query string and parameters.
         """
         if not self._up_to_date:
-            self._cached_placeholder_str, self._cached_placeholder_params = self._placeholder_pair()
+            (
+                self._cached_placeholder_str,
+                self._cached_placeholder_params,
+            ) = self._placeholder_pair()
             self._up_to_date = True
         string = self._cached_placeholder_str
         params = self._cached_placeholder_params
@@ -291,6 +315,7 @@ class SelectQuery(RecordQuery):
             string = ensure_bracketed(string)
             string = f"{string} AS {self.alias}"
         return string, params
+
     def placeholder_str(self, *args, include_alias: bool = True, **kwargs) -> str:
         """
         Returns the placeholder string for the query.
@@ -303,7 +328,8 @@ class SelectQuery(RecordQuery):
         """
         string, _ = self.placeholder_pair(include_alias=include_alias)
         return string
-    def AS(self, alias = None):
+
+    def AS(self, alias=None):
         """
         Sets the alias for the query.
         Args:
@@ -314,39 +340,47 @@ class SelectQuery(RecordQuery):
 
         self.alias = alias
         return self
-    def __str__(self) -> str:
 
-          start = "SelectQuery("
-          mid, args = self.placeholder_pair()
-          end = ")"
-          args = ", ".join(str(arg) for arg in args)
-          return f"{start}{mid}, <{args}> {end}"
+    def __str__(self) -> str:
+        start = "SelectQuery("
+        mid, args = self.placeholder_pair()
+        end = ")"
+        args = ", ".join(str(arg) for arg in args)
+        return f"{start}{mid}, <{args}> {end}"
+
     def __repr__(self) -> str:
-            start = "SelectQuery("
-            mid = column_string(self.columns)
-            end = ")"
-            order_by = f'order_by={column_string(self.order_by) if self.order_by else None}'
-            criteria = f'({self.criteria})'
-            limit = f'limit={self.limit}'
-            offset = f'offset={self.offset}'
-            group_by = f'group_by={column_string(self.group_by) if self.group_by else None}'
-            having = self.having.sql_string() if self.having else None
-            having = f'having={having}'
-            table_name = f'table_name={self.table_name}'
-            condition = self.condition.sql_string() if self.condition else None
-            condition = f'condition={condition}'
-            ignore_forbidden_chars = f'ifb={self.ignore_forbidden_chars}'
-            all = f'{start}{mid}, {table_name}, {condition}, {order_by}, {criteria}, {limit}, {offset}, {group_by}, {having}, {ignore_forbidden_chars}'
-            return f"{all}{end}"
-    def copy_with(self, columns: Union[SQLCol, list[SQLCol]] = None, table_name:str = None, condition:SQLCondition = None,
-                  order_by: Optional[List[SQLOrderBy]] = None, criteria:  List[str] = None,
-                  limit:Optional[Union[int, str]] = None, offset:Optional[Union[int, str]] = None,
-                  group_by: Union[SQLCol, list[SQLCol], None] = None,
-                  having: Optional[SQLCondition] = None,
-                  joins: Optional[List[JoinQuery]] = None,
-                  alias: Optional[str] = None,
-                  ignore_forbidden_chars: bool = False
-                  ) -> SelectQuery:
+        start = "SelectQuery("
+        mid = column_string(self.columns)
+        end = ")"
+        order_by = f"order_by={column_string(self.order_by) if self.order_by else None}"
+        criteria = f"({self.criteria})"
+        limit = f"limit={self.limit}"
+        offset = f"offset={self.offset}"
+        group_by = f"group_by={column_string(self.group_by) if self.group_by else None}"
+        having = self.having.sql_string() if self.having else None
+        having = f"having={having}"
+        table_name = f"table_name={self.table_name}"
+        condition = self.condition.sql_string() if self.condition else None
+        condition = f"condition={condition}"
+        ignore_forbidden_chars = f"ifb={self.ignore_forbidden_chars}"
+        all = f"{start}{mid}, {table_name}, {condition}, {order_by}, {criteria}, {limit}, {offset}, {group_by}, {having}, {ignore_forbidden_chars}"
+        return f"{all}{end}"
+
+    def copy_with(
+        self,
+        columns: Union[SQLCol, list[SQLCol]] = None,
+        table_name: str = None,
+        condition: SQLCondition = None,
+        order_by: Optional[List[SQLOrderBy]] = None,
+        criteria: List[str] = None,
+        limit: Optional[Union[int, str]] = None,
+        offset: Optional[Union[int, str]] = None,
+        group_by: Union[SQLCol, list[SQLCol], None] = None,
+        having: Optional[SQLCondition] = None,
+        joins: Optional[List[JoinQuery]] = None,
+        alias: Optional[str] = None,
+        ignore_forbidden_chars: bool = False,
+    ) -> SelectQuery:
         """
         Creates a copy of the current query with the specified modifications.
         Args:
@@ -372,10 +406,13 @@ class SelectQuery(RecordQuery):
             offset=offset if offset is not None else self.offset,
             group_by=group_by if group_by is not None else self.group_by,
             having=having if having is not None else self.having,
-            alias = alias if alias is not None else self.alias,
-            ignore_forbidden_chars=ignore_forbidden_chars if ignore_forbidden_chars is not None else self.ignore_forbidden_chars,
+            alias=alias if alias is not None else self.alias,
+            ignore_forbidden_chars=ignore_forbidden_chars
+            if ignore_forbidden_chars is not None
+            else self.ignore_forbidden_chars,
             joins=joins if joins is not None else self.joins,
-            )
+        )
+
     def copy(self) -> SelectQuery:
         """
         Creates a copy of the current query.
@@ -385,11 +422,13 @@ class SelectQuery(RecordQuery):
         return self.copy_with()
 
     @classmethod
-    def _SELECT(cls,column_list: Union[SQLCol, list[SQLCol]] = "*", *args: SQLCol, **kwargs) -> SelectQuery:
+    def _SELECT(
+        cls, column_list: Union[SQLCol, list[SQLCol]] = "*", *args: SQLCol, **kwargs
+    ) -> SelectQuery:
         """
         Constructs a SELECT SQL query.
         Args:
-            column_list (Union[SQLCol, list[SQLCol]], optional): A single column, 
+            column_list (Union[SQLCol, list[SQLCol]], optional): A single column,
                 a list of columns, or "*" to select all columns. Defaults to "*".
             *args (SQLCol): Additional columns to include in the SELECT query.
         Returns:
@@ -405,8 +444,9 @@ class SelectQuery(RecordQuery):
         column_list_ = column_list + list(args)
 
         return cls(columns=column_list_, **kwargs)
-    @normalize_args(skip = 1)
-    def JOINS(self, *joins: JoinQuery, join_list =None, **kwargs) -> SelectQuery:
+
+    @normalize_args(skip=1)
+    def JOINS(self, *joins: JoinQuery, join_list=None, **kwargs) -> SelectQuery:
         """
         Adds JOIN clauses to the query.
         Args:
@@ -417,13 +457,17 @@ class SelectQuery(RecordQuery):
         if join_list is not None:
             if isinstance(join_list, JoinQuery):
                 join_list = [join_list]
-            elif isinstance(join_list, Iterable) and not isinstance(join_list, (str, bytes)):
+            elif isinstance(join_list, Iterable) and not isinstance(
+                join_list, (str, bytes)
+            ):
                 join_list = list(join_list)
             else:
-                raise TypeError("join_list must be a JoinQuery or an iterable of JoinQuery")
+                raise TypeError(
+                    "join_list must be a JoinQuery or an iterable of JoinQuery"
+                )
         else:
             join_list = []
-            
+
         if not joins and not kwargs and not join_list:
             self.joins = None
             return self
@@ -433,7 +477,10 @@ class SelectQuery(RecordQuery):
         my_joins.extend(joins)
         self.joins = my_joins
         return self
-    def INNER_JOIN(self, table_name: str, on: SQLCondition, alias: Optional[str] = None) -> SelectQuery:
+
+    def INNER_JOIN(
+        self, table_name: str, on: SQLCondition, alias: Optional[str] = None
+    ) -> SelectQuery:
         """
         Adds an INNER JOIN clause to the query.
         Args:
@@ -446,7 +493,10 @@ class SelectQuery(RecordQuery):
         join = JoinQuery(table_name=table_name, on=on, join_type="INNER", alias=alias)
         self._add_join(join)
         return self
-    def LEFT_JOIN(self, table_name: str, on: SQLCondition, alias: Optional[str] = None) -> SelectQuery:
+
+    def LEFT_JOIN(
+        self, table_name: str, on: SQLCondition, alias: Optional[str] = None
+    ) -> SelectQuery:
         """
         Adds a LEFT JOIN clause to the query.
         Args:
@@ -459,7 +509,10 @@ class SelectQuery(RecordQuery):
         join = JoinQuery(table_name=table_name, on=on, join_type="LEFT", alias=alias)
         self._add_join(join)
         return self
-    def RIGHT_JOIN(self, table_name: str, on: SQLCondition, alias: Optional[str] = None) -> SelectQuery:
+
+    def RIGHT_JOIN(
+        self, table_name: str, on: SQLCondition, alias: Optional[str] = None
+    ) -> SelectQuery:
         """
         Adds a RIGHT JOIN clause to the query.
         Args:
@@ -472,7 +525,10 @@ class SelectQuery(RecordQuery):
         join = JoinQuery(table_name=table_name, on=on, join_type="RIGHT", alias=alias)
         self._add_join(join)
         return self
-    def FULL_JOIN(self, table_name: str, on: SQLCondition, alias: Optional[str] = None) -> SelectQuery:
+
+    def FULL_JOIN(
+        self, table_name: str, on: SQLCondition, alias: Optional[str] = None
+    ) -> SelectQuery:
         """
         Adds a FULL JOIN clause to the query.
         Args:
@@ -485,7 +541,10 @@ class SelectQuery(RecordQuery):
         join = JoinQuery(table_name=table_name, on=on, join_type="FULL", alias=alias)
         self._add_join(join)
         return self
-    def CROSS_JOIN(self, table_name: str, on: SQLCondition, alias: Optional[str] = None) -> SelectQuery:
+
+    def CROSS_JOIN(
+        self, table_name: str, on: SQLCondition, alias: Optional[str] = None
+    ) -> SelectQuery:
         """
         Adds a CROSS JOIN clause to the query.
         Args:
@@ -498,7 +557,10 @@ class SelectQuery(RecordQuery):
         join = JoinQuery(table_name=table_name, on=on, join_type="CROSS", alias=alias)
         self._add_join(join)
         return self
-    def OUTER_JOIN(self, table_name: str, on: SQLCondition, alias: Optional[str] = None) -> SelectQuery:
+
+    def OUTER_JOIN(
+        self, table_name: str, on: SQLCondition, alias: Optional[str] = None
+    ) -> SelectQuery:
         """
         Adds an OUTER JOIN clause to the query.
         Args:
@@ -511,7 +573,8 @@ class SelectQuery(RecordQuery):
         join = JoinQuery(table_name=table_name, on=on, join_type="OUTER", alias=alias)
         self._add_join(join)
         return self
-    def JOIN(self, *joins: JoinQuery, join_list = None, **kwargs) -> SelectQuery:
+
+    def JOIN(self, *joins: JoinQuery, join_list=None, **kwargs) -> SelectQuery:
         """
         Adds JOIN clauses to the query.
         Args:
@@ -529,6 +592,7 @@ class SelectQuery(RecordQuery):
             self.joins = former_joins
             raise e
         return self
+
     def WITH_alias_as_self(self, alias: SQLCol = None) -> WithQuery:
         """
         Creates a WithQuery with the current SelectQuery as its query.
@@ -537,12 +601,16 @@ class SelectQuery(RecordQuery):
         Returns:
             WithQuery: A new instance of WithQuery with the current SelectQuery as its query.
         """
-        return WithQuery(self, alias=alias, ignore_forbidden_chars=self.ignore_forbidden_chars)
+        return WithQuery(
+            self, alias=alias, ignore_forbidden_chars=self.ignore_forbidden_chars
+        )
+
     def __eq__(self, other):
-         return False
+        return False
+
     def __ne__(self, other):
-         return True
-    
+        return True
+
     @staticmethod
     def validate_join_list(joins: List[JoinQuery]) -> None:
         """
@@ -558,6 +626,7 @@ class SelectQuery(RecordQuery):
             raise TypeError("joins must be a Iterable")
         if not all(isinstance(join, JoinQuery) for join in joins):
             raise TypeError("All joins must be instances of JoinQuery")
+
     @staticmethod
     def validate_with_list(withs: List[WithQuery]) -> None:
         """
@@ -572,25 +641,28 @@ class SelectQuery(RecordQuery):
         if not isinstance(withs, Iterable):
             raise TypeError("withs must be a Iterable")
         if not all(isinstance(with_, WithQuery) for with_ in withs):
-            raise TypeError("All withs must be instances of WithQuery")    
-    def with_queries_as(self,*with_queries: WithQuery, _new_withs = True, **as_with_dict) -> SelectQuery:
+            raise TypeError("All withs must be instances of WithQuery")
+
+    def with_queries_as(
+        self, *with_queries: WithQuery, _new_withs=True, **as_with_dict
+    ) -> SelectQuery:
         """
         Adds one or more WITH queries to the current SelectQuery instance.
-        This method allows you to define Common Table Expressions (CTEs) using 
-        the provided `WithQuery` objects or keyword arguments. The resulting 
+        This method allows you to define Common Table Expressions (CTEs) using
+        the provided `WithQuery` objects or keyword arguments. The resulting
         query will include the specified WITH queries.
         Args:
-            *with_queries (WithQuery): One or more `WithQuery` objects to be 
+            *with_queries (WithQuery): One or more `WithQuery` objects to be
                 included in the WITH clause.
-            _new_withs (bool, optional): If True (default), replaces the existing 
-                WITH queries with the new ones. If False, appends the new WITH 
+            _new_withs (bool, optional): If True (default), replaces the existing
+                WITH queries with the new ones. If False, appends the new WITH
                 queries to the existing ones.
-            **as_with_dict: Additional WITH queries specified as keyword arguments, 
+            **as_with_dict: Additional WITH queries specified as keyword arguments,
                 where the key is the alias and the value is the query.
         Returns:
             SelectQuery: A new `SelectQuery` instance with the updated WITH queries.
         """
-        
+
         withs = WITH(*with_queries, **as_with_dict).withs
         if not _new_withs:
             withs = self.withs + withs
@@ -599,23 +671,40 @@ class SelectQuery(RecordQuery):
         return my_copy
 
 
-select_alias = [ "set_select", "set_selection", "set_columns", "change_selection", "change_columns",
-                "select_columns"]
+select_alias = [
+    "set_select",
+    "set_selection",
+    "set_columns",
+    "change_selection",
+    "change_columns",
+    "select_columns",
+]
 
 for alias in select_alias:
     setattr(SelectQuery, alias, SelectQuery.SELECT)
 
-def SELECT(column_list: Union[SQLCol, list[SQLCol]] = "*", *args: SQLCol,
-            ignore_forbidden_characters: bool = False, **kwargs: Any
-            ) -> SelectQuery:
 
-    return SelectQuery._SELECT(column_list, *args, ignore_forbidden_chars=ignore_forbidden_characters, **kwargs)
+def SELECT(
+    column_list: Union[SQLCol, list[SQLCol]] = "*",
+    *args: SQLCol,
+    ignore_forbidden_characters: bool = False,
+    **kwargs: Any,
+) -> SelectQuery:
+    return SelectQuery._SELECT(
+        column_list, *args, ignore_forbidden_chars=ignore_forbidden_characters, **kwargs
+    )
+
+
 SELECT.__doc__ = SelectQuery.SELECT.__doc__
 
 
-
 class WithQuery:
-    def __new__(cls, query: SelectQuery, alias: SQLCol = None, ignore_forbidden_chars: bool = False):
+    def __new__(
+        cls,
+        query: SelectQuery,
+        alias: SQLCol = None,
+        ignore_forbidden_chars: bool = False,
+    ):
         if isinstance(query, WithQuery):
             return query
         if not isinstance(query, SelectQuery):
@@ -624,7 +713,13 @@ class WithQuery:
             raise TypeError("alias must be an instance of SQLCol or None")
         query = query.copy()
         return super().__new__(cls)
-    def __init__(self, query: SelectQuery, alias: SQLCol = None, ignore_forbidden_chars: bool = False):
+
+    def __init__(
+        self,
+        query: SelectQuery,
+        alias: SQLCol = None,
+        ignore_forbidden_chars: bool = False,
+    ):
         self.ignore_forbidden_chars = ignore_forbidden_chars
         self.query = query
         self.alias = alias
@@ -634,7 +729,7 @@ class WithQuery:
         if self._alias is None:
             return self.query.alias
         return self._alias
-    
+
     @alias.setter
     def alias(self, value: SQLCol) -> None:
         if value is not None:
@@ -643,7 +738,7 @@ class WithQuery:
             validate_name(value, validate_chars=not self.ignore_forbidden_chars)
         self._alias = value
 
-    def placeholder_pair(self, include_with = True) -> tuple[str, Any]:
+    def placeholder_pair(self, include_with=True) -> tuple[str, Any]:
         alias = self.alias
         if alias is None:
             raise ValueError("Alias must be set for the WithQuery")
@@ -652,6 +747,7 @@ class WithQuery:
         if include_with:
             string = f"WITH {string}"
         return string, params
+
     def AS(self, alias: SQLCol) -> WithQuery:
         """
         Sets the alias for the WithQuery.
@@ -662,15 +758,24 @@ class WithQuery:
         """
         self.alias = alias
         return self
+
     def copy(self) -> WithQuery:
         """
         Creates a copy of the current WithQuery.
         Returns:
             WithQuery: A new instance of WithQuery with the same attributes as the current instance.
         """
-        return WithQuery(self.query.copy(), alias=self.alias, ignore_forbidden_chars=self.ignore_forbidden_chars)
+        return WithQuery(
+            self.query.copy(),
+            alias=self.alias,
+            ignore_forbidden_chars=self.ignore_forbidden_chars,
+        )
+
+
 @normalize_args()
-def WITH(*with_queries: WithQuery, base: Optional[SelectQuery] = None, **as_with_dict) -> SelectQuery:
+def WITH(
+    *with_queries: WithQuery, base: Optional[SelectQuery] = None, **as_with_dict
+) -> SelectQuery:
     """
     Constructs a WITH SQL query.
     Args:
@@ -696,7 +801,7 @@ def WITH(*with_queries: WithQuery, base: Optional[SelectQuery] = None, **as_with
     for i, with_query in enumerate(with_queries):
         if isinstance(with_query, SelectQuery):
             with_queries[i] = WithQuery(with_query)
-    base:SelectQuery = base or SelectQuery()
+    base: SelectQuery = base or SelectQuery()
 
     base.withs = with_queries
     return base

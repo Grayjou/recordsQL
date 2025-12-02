@@ -1,9 +1,10 @@
-
 from typing import Callable
 from dataclasses import dataclass
 from collections.abc import Iterable
 from types import GeneratorType
-def is_collection(thing:Iterable) -> bool:
+
+
+def is_collection(thing: Iterable) -> bool:
     """
     Check if the given thing is a collection (list, tuple, set, etc.).
     Args:
@@ -11,17 +12,21 @@ def is_collection(thing:Iterable) -> bool:
     Returns:
         bool: True if the object is a collection, False otherwise.
     """
-    return isinstance(thing, Iterable) and not isinstance(thing, (bytes, str, GeneratorType))
+    return isinstance(thing, Iterable) and not isinstance(
+        thing, (bytes, str, GeneratorType)
+    )
+
 
 def is_unknown(value) -> bool:
-        """
-        Check if the value is an instance of Unknown.
-        Args:
-            value: The value to check.
-        Returns:
-            bool: True if the value is an instance of Unknown, False otherwise.
-        """
-        return isinstance(value, Unknown)
+    """
+    Check if the value is an instance of Unknown.
+    Args:
+        value: The value to check.
+    Returns:
+        bool: True if the value is an instance of Unknown, False otherwise.
+    """
+    return isinstance(value, Unknown)
+
 
 @dataclass(frozen=True)
 class Unknown:
@@ -42,7 +47,7 @@ class Unknown:
 
     def __bool__(self):
         return False
-    
+
     @staticmethod
     def is_unknown(value) -> bool:
         """
@@ -54,7 +59,10 @@ class Unknown:
         """
         return is_unknown(value)
 
+
 unknown = Unknown()
+
+
 def none_or_unknown(value) -> bool:
     """
     Check if the value is None or an instance of Unknown.
@@ -64,6 +72,7 @@ def none_or_unknown(value) -> bool:
         bool: True if the value is None or an instance of Unknown, False otherwise.
     """
     return value is None or is_unknown(value)
+
 
 def quote_str(value: str, quote_char: str = '"') -> str:
     """
@@ -76,8 +85,10 @@ def quote_str(value: str, quote_char: str = '"') -> str:
     """
     return f"{quote_char}{value}{quote_char}" if value else ""
 
+
 def keys_exist_in_dict(d: dict, keys: Iterable[str]) -> bool:
     return all(key in d for key in keys)
+
 
 def bracket_str(value: str, left_bracket: str = "(", right_bracket: str = ")") -> str:
     """
@@ -91,6 +102,7 @@ def bracket_str(value: str, left_bracket: str = "(", right_bracket: str = ")") -
     """
     return f"{left_bracket}{value}{right_bracket}" if value else ""
 
+
 def str_is_between(value: str, start: str, end: str) -> bool:
     """
     Check if a string is between two other strings.
@@ -103,7 +115,10 @@ def str_is_between(value: str, start: str, end: str) -> bool:
     """
     return value.startswith(start) and value.endswith(end)
 
-def ensure_bracketed(value: str, left_bracket: str = "(", right_bracket: str = ")") -> str:
+
+def ensure_bracketed(
+    value: str, left_bracket: str = "(", right_bracket: str = ")"
+) -> str:
     """
     Ensure a string is enclosed with the specified brackets.
     Args:
@@ -117,10 +132,10 @@ def ensure_bracketed(value: str, left_bracket: str = "(", right_bracket: str = "
         return bracket_str(value, left_bracket, right_bracket)
     return value
 
+
 class All:
-    
     def __init__(self):
-        pass    
+        pass
+
     def __eq__(self, value):
         return isinstance(value, All)
-    

@@ -1,4 +1,3 @@
-
 from os import path as os_path_basename
 from .utils import unknown, All
 import re
@@ -7,42 +6,53 @@ from inspect import signature
 from .types import SQLCol
 from typing import Any, Union, Iterable, Callable, List
 from .dependencies import SQLExpression
-def validate_table_name(func, table_name_position: int = 0, *,
-    validate_chars: bool = True, 
-    validate_words: bool = True, 
+
+
+def validate_table_name(
+    func,
+    table_name_position: int = 0,
+    *,
+    validate_chars: bool = True,
+    validate_words: bool = True,
     validate_len: bool = True,
     allow_dot: bool = True,
     allow_dollar: bool = False,
     max_len: int = 255,
-    forgiven_chars = set(),
-    allow_digit: bool = False,):
+    forgiven_chars=set(),
+    allow_digit: bool = False,
+):
     """
     Decorator to validate the 'table_name' argument.
     """
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         bound_args = signature(func).bind_partial(*args, **kwargs)
         bound_args.apply_defaults()
 
-        if 'table_name' in bound_args.arguments:
-            table_name = bound_args.arguments['table_name']
+        if "table_name" in bound_args.arguments:
+            table_name = bound_args.arguments["table_name"]
         elif len(args) > table_name_position:
             table_name = args[table_name_position]
         else:
             raise ValueError("No 'table_name' argument found to validate.")
 
-        validate_name(table_name,
-                      validate_chars=validate_chars,
-                      validate_words=validate_words,
-                      validate_len=validate_len,
-                      allow_dot=allow_dot,
-                      allow_dollar=allow_dollar,
-                      max_len=max_len,
-                      forgiven_chars=forgiven_chars,
-                      allow_digit=allow_digit)
+        validate_name(
+            table_name,
+            validate_chars=validate_chars,
+            validate_words=validate_words,
+            validate_len=validate_len,
+            allow_dot=allow_dot,
+            allow_dollar=allow_dollar,
+            max_len=max_len,
+            forgiven_chars=forgiven_chars,
+            allow_digit=allow_digit,
+        )
         return func(*args, **kwargs)
 
     return wrapper
+
+
 def is_number(s):
     try:
         float(s)
@@ -53,18 +63,26 @@ def is_number(s):
 
 # Reserved device names on Windows (case-insensitive)
 WINDOWS_RESERVED_NAMES = {
-    "CON", "PRN", "AUX", "NUL",
+    "CON",
+    "PRN",
+    "AUX",
+    "NUL",
     *(f"COM{i}" for i in range(1, 10)),
-    *(f"LPT{i}" for i in range(1, 10))
+    *(f"LPT{i}" for i in range(1, 10)),
 }
 
 # Disallowed characters on Windows & common CLI contexts
-ILLEGAL_CHARS_PATTERN = re.compile(r'[<>:"/\\|?*\x00-\x1F]')  # \x00-\x1F = control chars
+ILLEGAL_CHARS_PATTERN = re.compile(
+    r'[<>:"/\\|?*\x00-\x1F]'
+)  # \x00-\x1F = control chars
 
-def validate_file_name(file_name: str, *, return_false_on_error: bool = False, remove_suffix: bool = False) -> bool:
+
+def validate_file_name(
+    file_name: str, *, return_false_on_error: bool = False, remove_suffix: bool = False
+) -> bool:
     """
     Validates a file name to ensure it is safe for filesystem and console usage.
-    
+
     Args:
         file_name (str): The file name to validate.
         return_false_on_error (bool): If True, returns False instead of raising on error.
@@ -95,7 +113,9 @@ def validate_file_name(file_name: str, *, return_false_on_error: bool = False, r
         if stripped_name in ("/", "\\"):
             raise ValueError("file_name cannot be just a slash")
         if ILLEGAL_CHARS_PATTERN.search(stripped_name):
-            raise ValueError("file_name contains illegal characters (e.g. < > : \" / \\ | ? *)")
+            raise ValueError(
+                'file_name contains illegal characters (e.g. < > : " / \\ | ? *)'
+            )
         if stripped_name.upper() in WINDOWS_RESERVED_NAMES:
             raise ValueError(f"file_name '{file_name}' is reserved on Windows")
         if len(stripped_name) > 255:
@@ -109,7 +129,10 @@ def validate_file_name(file_name: str, *, return_false_on_error: bool = False, r
 
     return True
 
-def validate_database_path(database_path: str, *, return_false_on_error: bool = False) -> bool:
+
+def validate_database_path(
+    database_path: str, *, return_false_on_error: bool = False
+) -> bool:
     """
     Validates the given database path to ensure it meets the requirements for a valid SQLite database file.
 
@@ -133,10 +156,14 @@ def validate_database_path(database_path: str, *, return_false_on_error: bool = 
         file_name = os_path_basename(database_path)
 
         if not file_name.endswith(".db"):
-            raise ValueError("database_path must be a valid SQLite database file (must end with .db)")
+            raise ValueError(
+                "database_path must be a valid SQLite database file (must end with .db)"
+            )
 
         # Validate the filename before the .db
-        if not validate_file_name(file_name, return_false_on_error=False, remove_suffix=True):
+        if not validate_file_name(
+            file_name, return_false_on_error=False, remove_suffix=True
+        ):
             raise ValueError("database_path contains an invalid file name before '.db'")
 
     except ValueError:
@@ -147,36 +174,65 @@ def validate_database_path(database_path: str, *, return_false_on_error: bool = 
 
     return True
 
+
 keywords = {
-        "select", "from", "where", "table", "insert", "update", "delete",
-        "create", "drop", "alter", "join", "on", "as", "and", "or", "not",
-        "in", "is", "null", "values", "set", "group", "by", "order", "having",
-        "limit", "offset", "distinct"
-    }
+    "select",
+    "from",
+    "where",
+    "table",
+    "insert",
+    "update",
+    "delete",
+    "create",
+    "drop",
+    "alter",
+    "join",
+    "on",
+    "as",
+    "and",
+    "or",
+    "not",
+    "in",
+    "is",
+    "null",
+    "values",
+    "set",
+    "group",
+    "by",
+    "order",
+    "having",
+    "limit",
+    "offset",
+    "distinct",
+}
+
 
 def get_forbidden_words_in(name: str):
-
-    tokens = name.casefold().replace('.', ' ').replace('_', ' ').split()
+    tokens = name.casefold().replace(".", " ").replace("_", " ").split()
     return [kw for kw in keywords if kw in tokens]
 
+
 def validate_name(
-    name: str, *, 
-    validate_chars: bool = True, 
-    validate_words: bool = True, 
+    name: str,
+    *,
+    validate_chars: bool = True,
+    validate_words: bool = True,
     validate_len: bool = True,
     allow_dot: bool = True,
     allow_dollar: bool = False,
     max_len: int = 255,
-    forgiven_chars = set(),
+    forgiven_chars=set(),
     allow_digit: bool = False,
 ) -> None:
-    
-
     if isinstance(name, SQLExpression) and name.expression_type == "query":
         if getattr(name, "skip_validation", False):
-            raise AttributeError("Conflicting attribute: skip_validation at validate_name")
+            raise AttributeError(
+                "Conflicting attribute: skip_validation at validate_name"
+            )
         if getattr(name, "ignore_forbidden_chars", False):
-            raise AttributeError("Conflicting attribute: ignore_forbidden_chars at validate_name")
+            raise AttributeError(
+                "Conflicting attribute: ignore_forbidden_chars at validate_name"
+            )
         return
     if not isinstance(name, str):
         raise TypeError("Name must be a string.")
@@ -192,27 +248,31 @@ def validate_name(
 
     if name[0].isdigit() and not allow_digit:
         raise ValueError("Column name cannot start with a digit.")
-    
+
     if validate_chars:
         allowed = set("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_")
         allowed.update(forgiven_chars)
         if allow_dot:
-            allowed.add('.')
+            allowed.add(".")
         if allow_dollar:
-            allowed.add('$')
-        
+            allowed.add("$")
+
         bad_chars = [c for c in name if c not in allowed]
         if bad_chars:
             raise ValueError(f"Column name contains forbidden characters: {bad_chars}")
 
         if allow_dot:
             # Extra check: make sure dots are only separating valid parts
-            parts = name.split('.')
+            parts = name.split(".")
             for part in parts:
                 if not part:
-                    raise ValueError("Column name has consecutive dots or leading/trailing dot.")
+                    raise ValueError(
+                        "Column name has consecutive dots or leading/trailing dot."
+                    )
                 if part[0].isdigit():
-                    raise ValueError(f"Each part of a dotted name must not start with a digit: {part}")
+                    raise ValueError(
+                        f"Each part of a dotted name must not start with a digit: {part}"
+                    )
 
     if validate_words:
         found = next((word for word in keywords if word == name.casefold()), None)
@@ -220,12 +280,16 @@ def validate_name(
             raise ValueError(f"Name contains forbidden words: {found}")
 
 
-
-def must_be_type(obj: Any, type_: Union[type, Iterable[type]], name: str = "argument",
-                 must_be_true: bool = False, additional_checks: List[Callable] = None) -> None:
+def must_be_type(
+    obj: Any,
+    type_: Union[type, Iterable[type]],
+    name: str = "argument",
+    must_be_true: bool = False,
+    additional_checks: List[Callable] = None,
+) -> None:
     """
     Validate that the input is of a specific type or types.
-    
+
     Args:
         obj (Any): The input to validate.
         type_ (Union[type, Iterable[type]]): The expected type or types.
@@ -248,15 +312,18 @@ def must_be_type(obj: Any, type_: Union[type, Iterable[type]], name: str = "argu
 
     if not isinstance(obj, type_tuple):
         type_names = ", ".join(t.__name__ for t in type_tuple)
-        raise TypeError(f"{name} must be of type {type_names}, but got {type(obj).__name__}.")
+        raise TypeError(
+            f"{name} must be of type {type_names}, but got {type(obj).__name__}."
+        )
 
     if must_be_true and not bool(obj):
         raise ValueError(f"{name} must be truthy, but got {obj!r}.")
 
     for check in additional_checks:
         if not check(obj):
-            raise ValueError(f"{name} failed additional check {check.__name__}: {obj!r}.")
-
+            raise ValueError(
+                f"{name} failed additional check {check.__name__}: {obj!r}."
+            )
 
 
 def must_be_str(s: str, name: str = "argument", must_not_be_empty: bool = True) -> str:
@@ -266,52 +333,59 @@ def must_be_str(s: str, name: str = "argument", must_not_be_empty: bool = True) 
     must_be_type(s, str, name=name, must_be_true=must_not_be_empty)
     return s
 
-    
 
 def validate_column_name(
-    name: SQLCol, *, 
-    validate_chars: bool = True, 
-    validate_words: bool = True, 
+    name: SQLCol,
+    *,
+    validate_chars: bool = True,
+    validate_words: bool = True,
     validate_len: bool = True,
     allow_dot: bool = True,
     allow_dollar: bool = False,
     max_len: int = 255,
-    forgiven_chars = set()
+    forgiven_chars=set(),
 ) -> None:
     if name in ("*", All()) or list(name) == ["*"]:
         return
     validate_name(
-        name, 
-        validate_chars=validate_chars, 
-        validate_words=validate_words, 
+        name,
+        validate_chars=validate_chars,
+        validate_words=validate_words,
         validate_len=validate_len,
         allow_dot=allow_dot,
         allow_dollar=allow_dollar,
         max_len=max_len,
-        forgiven_chars=forgiven_chars
+        forgiven_chars=forgiven_chars,
     )
 
-def validate_column_names(names, *, 
-    validate_chars: bool = True, 
-    validate_words: bool = True, 
+
+def validate_column_names(
+    names,
+    *,
+    validate_chars: bool = True,
+    validate_words: bool = True,
     validate_len: bool = True,
     allow_dot: bool = True,
     allow_dollar: bool = False,
     max_len: int = 255,
-    forgiven_chars = set()
+    forgiven_chars=set(),
 ) -> None:
-    if names in ("*", All(), None) or list(names) == ["*"] or any(n in ("*", All()) for n in names):
+    if (
+        names in ("*", All(), None)
+        or list(names) == ["*"]
+        or any(n in ("*", All()) for n in names)
+    ):
         return
     if isinstance(names, str):
         names = [names]
     for name in names:
         validate_column_name(
-            name, 
-            validate_chars=validate_chars, 
-            validate_words=validate_words, 
+            name,
+            validate_chars=validate_chars,
+            validate_words=validate_words,
             validate_len=validate_len,
             allow_dot=allow_dot,
             allow_dollar=allow_dollar,
             max_len=max_len,
-            forgiven_chars=forgiven_chars
+            forgiven_chars=forgiven_chars,
         )

@@ -1,17 +1,21 @@
 from typing import List, Tuple, Any, Optional, Union, Dict
 from ..dependencies import SQLCondition
 from .formatters import (
-    SQLCol, _format_conditions, _format_table_name,
-    format_set_clause, _format_returning
+    SQLCol,
+    _format_conditions,
+    _format_table_name,
+    format_set_clause,
+    _format_returning,
 )
 from .formatters import normalize_update_values
+
 
 def build_update_query(
     table_name: str,
     values: Union[Dict[str, Any], List[Tuple[str, Any]], Tuple[str, Any]],
     condition: Optional[SQLCondition] = None,
     returning: Optional[Union[SQLCol, List[SQLCol]]] = None,
-    ignore_forbidden_chars: bool = False
+    ignore_forbidden_chars: bool = False,
 ) -> Tuple[str, List[Any]]:
     """
     Builds an UPDATE SQL query.

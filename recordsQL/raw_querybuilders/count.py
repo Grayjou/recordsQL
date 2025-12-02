@@ -2,16 +2,20 @@ from typing import List, Tuple, Any, Optional, Union
 from ..dependencies import SQLCondition, SQLExpression
 from ..utils import All
 from .formatters import (
-    SQLCol, _format_conditions, _format_group_by,
-    _format_having, _format_table_name
+    SQLCol,
+    _format_conditions,
+    _format_group_by,
+    _format_having,
+    _format_table_name,
 )
+
 
 def build_count_query(
     table_name: str,
     condition: Optional[SQLCondition] = None,
     group_by: Union[SQLCol, List[SQLCol], None] = None,
     having: Optional[SQLCondition] = None,
-    ignore_forbidden_chars: bool = False
+    ignore_forbidden_chars: bool = False,
 ) -> Tuple[str, List[Any]]:
     """
     Builds a COUNT(*) SQL query with optional WHERE, GROUP BY and HAVING clauses.
@@ -37,5 +41,3 @@ def build_count_query(
     all_params = where_params + having_params
 
     return query, all_params
-
-
