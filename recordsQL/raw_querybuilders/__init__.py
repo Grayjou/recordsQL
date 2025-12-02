@@ -13,5 +13,5 @@ __all__ = [
     "build_select_query",
     "build_update_query",
     "OnConflictQuery",
-    "JoinQuery"
+    "JoinQuery",
 ]

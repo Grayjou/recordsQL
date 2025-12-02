@@ -1,22 +1,28 @@
-#record_queries/formatters.py
+# record_queries/formatters.py
 
 from typing import Dict, Any, List, Tuple, Union, Optional
-from ..dependencies import SQLCondition, SQLExpression, FalseCondition, ensure_sql_expression
+from ..dependencies import (
+    SQLCondition,
+    SQLExpression,
+    FalseCondition,
+    ensure_sql_expression,
+)
 from ..validators import validate_name
 from ..utils import All
 from ..base import RecordQuery
-SQLCol = Union[str, SQLExpression, RecordQuery]  # Type alias for column names
-SQLOrderBy = Union[str, SQLExpression] # Type alias for order_by parameter
 
-def _normalize_column(column: SQLCol, *, ignore_forbidden_chars:bool = False) -> str:
+SQLCol = Union[str, SQLExpression, RecordQuery]  # Type alias for column names
+SQLOrderBy = Union[str, SQLExpression]  # Type alias for order_by parameter
+
+
+def _normalize_column(column: SQLCol, *, ignore_forbidden_chars: bool = False) -> str:
     if _is_all_columns(column):
         return "*"
     if isinstance(column, str):
-
         column = column.strip()
         if not ignore_forbidden_chars:
             validate_name(column)  # Validate the column name
-        #this will run the validation of the column name
+        # this will run the validation of the column name
         return column
     elif isinstance(column, SQLExpression):
         if not column.expression_type == "column":
@@ -25,7 +31,10 @@ def _normalize_column(column: SQLCol, *, ignore_forbidden_chars:bool = False) ->
     else:
         raise TypeError("Column must be a string or a column expression.")
 
-def _collect_column_placeholder(column: SQLCol, ignore_forbidden_chars: bool = False) -> str:
+
+def _collect_column_placeholder(
+    column: SQLCol, ignore_forbidden_chars: bool = False
+) -> str:
     if isinstance(column, str):
         column = column.strip()
         if not ignore_forbidden_chars:
@@ -36,46 +45,62 @@ def _collect_column_placeholder(column: SQLCol, ignore_forbidden_chars: bool = F
     else:
         raise TypeError("Column must be a string or a column expression.")
 
-def collect_column_placeholders(columns: Union[All, List[SQLCol], str], ignore_forbidden_chars: bool = False) -> List[str]:
+
+def collect_column_placeholders(
+    columns: Union[All, List[SQLCol], str], ignore_forbidden_chars: bool = False
+) -> List[str]:
     if _is_all_columns(columns):
         return "*", []
     elif isinstance(columns, SQLCol):
         col_list = [columns]
     elif isinstance(columns, (list, tuple)):
-        col_list  = columns
+        col_list = columns
     else:
         raise TypeError("columns must be a list of strings, a string, or All().")
     collected_strings = []
     collected_placeholders = []
     for col in col_list:
-        col_str, placeholders = _collect_column_placeholder(col, ignore_forbidden_chars=ignore_forbidden_chars)
+        col_str, placeholders = _collect_column_placeholder(
+            col, ignore_forbidden_chars=ignore_forbidden_chars
+        )
         collected_strings.append(col_str)
         collected_placeholders.extend(placeholders)
     col_str = ", ".join(collected_strings)
     return col_str, collected_placeholders
-    
+
 
 def _is_all_columns(columns):
+    return (
+        isinstance(columns, All)
+        or columns in (None, [], "*")
+        or list(columns) == ["*"]
+        or any(c in (None, [], "*") for c in columns)
+    )
 
-    return isinstance(columns, All) or columns in (None, [], "*") or list(columns) == ["*"] or any(c in (None, [], "*") for c in columns)
 
-def _format_columns(columns: Union[All, List[SQLCol], str], ignore_forbidden_chars: bool = False) -> str:
-
+def _format_columns(
+    columns: Union[All, List[SQLCol], str], ignore_forbidden_chars: bool = False
+) -> str:
     if _is_all_columns(columns):
         return "*"
     elif isinstance(columns, SQLCol):
         col_list = [columns]
     elif isinstance(columns, (list, tuple)):
-        col_list  = columns
+        col_list = columns
     else:
         raise TypeError("columns must be a list of strings, a string, or All().")
 
-    columns = [_normalize_column(col, ignore_forbidden_chars=ignore_forbidden_chars) for col in col_list]
+    columns = [
+        _normalize_column(col, ignore_forbidden_chars=ignore_forbidden_chars)
+        for col in col_list
+    ]
     col_str = ", ".join(columns)
 
     return col_str
 
+
 format_columns = _format_columns  # Alias for backward compatibility
+
 
 def _normalize_order_by(order_by: Union[str, SQLExpression]) -> str:
     if isinstance(order_by, str):
@@ -83,15 +108,15 @@ def _normalize_order_by(order_by: Union[str, SQLExpression]) -> str:
     elif isinstance(order_by, SQLExpression):
         if not order_by.is_column_expression():
             raise TypeError("order_by must be a string or a column expression.")
-        return order_by.sql_string(include_sign_only_if_negative=True, invert = True)
+        return order_by.sql_string(include_sign_only_if_negative=True, invert=True)
     else:
         raise TypeError("order_by must be a string or a column expression.")
 
+
 def _format_order_by(
     order_by: Optional[Union[SQLOrderBy, List[SQLOrderBy]]],
-    criteria: Union[str, List[str]] = "DESC"
+    criteria: Union[str, List[str]] = "DESC",
 ) -> str:
-
     if not order_by:
         return ""
 
@@ -113,21 +138,30 @@ def _format_order_by(
 
     return " ORDER BY " + ", ".join(order_clauses)
 
+
 format_order_by = _format_order_by  # Alias for backward compatibility
 
-def _format_limit_offset(limit: Optional[Union[int, str]], offset: Optional[Union[int, str]]) -> str:
+
+def _format_limit_offset(
+    limit: Optional[Union[int, str]], offset: Optional[Union[int, str]]
+) -> str:
     clauses = []
     if limit is not None:
         try:
             clauses.append(f"LIMIT {int(limit)}")
         except (ValueError, TypeError):
-            raise ValueError("Limit must be an integer or a string representing an integer.")
+            raise ValueError(
+                "Limit must be an integer or a string representing an integer."
+            )
     if offset is not None:
         try:
             clauses.append(f"OFFSET {int(offset)}")
         except (ValueError, TypeError):
-            raise ValueError("Offset must be an integer or a string representing an integer.")
+            raise ValueError(
+                "Offset must be an integer or a string representing an integer."
+            )
     return " " + " ".join(clauses) if clauses else ""
+
 
 def column_string(column_list: Union[SQLCol, List[SQLCol]], *args: SQLCol) -> str:
     if column_list == "*":
@@ -145,10 +179,9 @@ def column_string(column_list: Union[SQLCol, List[SQLCol]], *args: SQLCol) -> st
     column_str = format_columns(all_cols)
     return column_str
 
+
 def _format_conditions(
-    condition: Optional[SQLCondition],
-    *,
-    default_false: bool = False
+    condition: Optional[SQLCondition], *, default_false: bool = False
 ) -> Tuple[str, List[Any]]:
     """
     Formats a WHERE clause and its parameters from a SQLCondition.
@@ -162,19 +195,23 @@ def _format_conditions(
     """
     if condition and not isinstance(condition, FalseCondition):
         where_clause, where_params = condition.placeholder_pair()
-        where_clause = f' WHERE {where_clause}'
+        where_clause = f" WHERE {where_clause}"
         return where_clause, where_params
     elif default_false:
         return " WHERE 0=1", []  # Always false (could be used for defensive queries)
     else:
         return "", []
 
-format_conditions = _format_conditions  
+
+format_conditions = _format_conditions
 
 from collections.abc import Iterable
 from typing import Any, List
 
-def ensure_list(value: Any, *, decompose_string: bool = False, unpack_iterable: bool = False) -> List[Any]:
+
+def ensure_list(
+    value: Any, *, decompose_string: bool = False, unpack_iterable: bool = False
+) -> List[Any]:
     """
     Ensures the input is returned as a list.
 
@@ -201,7 +238,7 @@ def _validate_col_names(col_names: Iterable[str]) -> None:
         raise TypeError("Column names must be an iterable of strings.")
     for col_name in col_names:
         validate_name(col_name)
-    
+
 
 def normalize_update_values(
     values: Union[Dict[str, Any], List[tuple], tuple]
@@ -217,8 +254,9 @@ def normalize_update_values(
             return dict(values)
         except Exception:
             raise TypeError("List/tuple values must be (column, value) pairs.")
-    raise TypeError("Values must be a dict, a list of pairs, or a single (column, value) tuple.")
-
+    raise TypeError(
+        "Values must be a dict, a list of pairs, or a single (column, value) tuple."
+    )
 
 
 def _format_or_clause(action: Optional[str]) -> str:
@@ -235,9 +273,10 @@ def _format_or_clause(action: Optional[str]) -> str:
         return f" OR {action.strip().upper()}"
     return ""
 
+
 def _format_returning(
     returning: Optional[Union[SQLCol, List[SQLCol]]],
-    ignore_forbidden_chars: bool = False
+    ignore_forbidden_chars: bool = False,
 ) -> str:
     """
     Formats a RETURNING clause.
@@ -251,10 +290,11 @@ def _format_returning(
     """
     if not returning:
         return ""
-    
+
     cols = ensure_list(returning, unpack_iterable=True)
     returning_cols = ", ".join(
-        _normalize_column(col, ignore_forbidden_chars=ignore_forbidden_chars) for col in cols
+        _normalize_column(col, ignore_forbidden_chars=ignore_forbidden_chars)
+        for col in cols
     )
     return f" RETURNING {returning_cols}"
 
@@ -273,6 +313,7 @@ def _all_have_same_keys(dicts: List[Dict[str, Any]]) -> bool:
         return True
     first_keys = set(dicts[0].keys())
     return all(set(d.keys()) == first_keys for d in dicts[1:])
+
 
 def format_set_clause(values: Dict[str, Any]) -> Tuple[str, List[Any]]:
     """
@@ -296,19 +337,26 @@ def format_set_clause(values: Dict[str, Any]) -> Tuple[str, List[Any]]:
     ]
 
     set_clause = "SET " + ", ".join(part for part, _ in parts_and_injections)
-    all_injections = [param for _, injections in parts_and_injections for param in injections]
+    all_injections = [
+        param for _, injections in parts_and_injections for param in injections
+    ]
 
     return set_clause, all_injections
 
 
-def _format_group_by(group_by: Optional[Union[SQLCol, List[SQLCol]]], ignore_forbidden_chars: bool = False) -> str:
+def _format_group_by(
+    group_by: Optional[Union[SQLCol, List[SQLCol]]],
+    ignore_forbidden_chars: bool = False,
+) -> str:
     if not group_by:
         return ""
     group_cols = ensure_list(group_by, unpack_iterable=True)
     group_cols_str = ", ".join(
-        _normalize_column(col, ignore_forbidden_chars=ignore_forbidden_chars) for col in group_cols
+        _normalize_column(col, ignore_forbidden_chars=ignore_forbidden_chars)
+        for col in group_cols
     )
     return f" GROUP BY {group_cols_str}"
+
 
 def _format_having(having: Optional[SQLCondition]) -> Tuple[str, List[Any]]:
     if having and not isinstance(having, FalseCondition):
@@ -317,29 +365,36 @@ def _format_having(having: Optional[SQLCondition]) -> Tuple[str, List[Any]]:
     else:
         return "", []
 
-quote_dict = {
-        0: '"',
-        1: "'",
-        }
-def quote_sandwich(value: str, quote = 0) -> str:  
 
+quote_dict = {
+    0: '"',
+    1: "'",
+}
+
+
+def quote_sandwich(value: str, quote=0) -> str:
     if quote not in quote_dict:
-        raise ValueError("Invalid quote type. Use 0 for double quotes or 1 for single quotes.")
+        raise ValueError(
+            "Invalid quote type. Use 0 for double quotes or 1 for single quotes."
+        )
     if not isinstance(value, str):
         raise TypeError("Value must be a string.")
     if not value:
         raise ValueError("Value cannot be empty.")
     thy_quote = quote_dict[quote]
-    return f'{thy_quote}{value}{thy_quote}'
+    return f"{thy_quote}{value}{thy_quote}"
 
-def isit_quoted(value: str, quote = 0) -> bool:
 
+def isit_quoted(value: str, quote=0) -> bool:
     if quote not in quote_dict:
-        raise ValueError("Invalid quote type. Use 0 for double quotes or 1 for single quotes.")
+        raise ValueError(
+            "Invalid quote type. Use 0 for double quotes or 1 for single quotes."
+        )
     thy_quote = quote_dict[quote]
     return value.startswith(thy_quote) and value.endswith(thy_quote)
 
-def _format_table_name(table_name: str, validate = True) -> str:
+
+def _format_table_name(table_name: str, validate=True) -> str:
     """
     Formats a table name for SQL queries.
 
@@ -353,5 +408,5 @@ def _format_table_name(table_name: str, validate = True) -> str:
         validate_name(table_name, allow_dot=True, allow_dollar=False, allow_digit=True)
     if isit_quoted(table_name, 0):
         return table_name.strip()
-    
+
     return quote_sandwich(table_name, 0)  # Add double quotes around the table name

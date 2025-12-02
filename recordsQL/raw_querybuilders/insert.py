@@ -1,9 +1,20 @@
 from typing import List, Tuple, Any, Optional, Union, Dict
-from ..dependencies import SQLExpression, SQLCondition, ensure_sql_expression, no_condition
+from ..dependencies import (
+    SQLExpression,
+    SQLCondition,
+    ensure_sql_expression,
+    no_condition,
+)
 from .formatters import (
-    SQLCol, _normalize_column, _format_table_name,
-    normalize_update_values, format_set_clause, _format_or_clause,
-    _format_returning, ensure_list, _validate_col_names
+    SQLCol,
+    _normalize_column,
+    _format_table_name,
+    normalize_update_values,
+    format_set_clause,
+    _format_or_clause,
+    _format_returning,
+    ensure_list,
+    _validate_col_names,
 )
 from expressQL.base import ensure_col
 from .utils import validate_monolist
@@ -14,14 +25,13 @@ from .formatters import _normalize_column
 from ..utils import All
 
 
-
 def build_insert_query(
     table_name: str,
     values: Union[Dict[str, Any], List[Dict[str, Any]]],
     or_action: Optional[str] = None,
     on_conflict: Optional["OnConflictQuery"] = None,
     returning: Optional[Union[SQLCol, List[SQLCol]]] = None,
-    ignore_forbidden_chars: bool = False
+    ignore_forbidden_chars: bool = False,
 ) -> Tuple[str, List[Any]]:
     """
     Builds an INSERT SQL query with optional conflict handling and returning clause.
@@ -50,7 +60,10 @@ def build_insert_query(
     # --- Extract columns ---
     col_names = list(values[0].keys())
     _validate_col_names(col_names)  # Reuse your validation
-    col_list = [_normalize_column(col, ignore_forbidden_chars=ignore_forbidden_chars) for col in col_names]
+    col_list = [
+        _normalize_column(col, ignore_forbidden_chars=ignore_forbidden_chars)
+        for col in col_names
+    ]
     column_str = ", ".join(col_list)
 
     # --- Prepare placeholders and parameters ---
@@ -87,34 +100,46 @@ def build_insert_query(
 
     return query, all_params
 
+
 class OnConflictQuery:
     """
     Class to handle ON CONFLICT clauses in SQL queries.
-    
+
     Example usage:
         OnConflictQuery("Nothing")
 
     """
+
     valid_do_what = {"UPDATE", "NOTHING"}
-    def __init__(self, do_what:str, conflict_cols:list[str], set_clauses:Union[List[Tuple], Dict] = None, condition: SQLCondition = None) -> None:
+
+    def __init__(
+        self,
+        do_what: str,
+        conflict_cols: list[str],
+        set_clauses: Union[List[Tuple], Dict] = None,
+        condition: SQLCondition = None,
+    ) -> None:
         self.DO(do_what)
         self.SET(set_clauses)
         self.WHERE(condition)
         conflict_cols = [ensure_col(col) for col in conflict_cols]
         self._conflict_cols = conflict_cols
+
     @property
     def conflict_cols(self) -> List[SQLCol]:
         return self._conflict_cols
+
     @conflict_cols.setter
     def conflict_cols(self, value: List[SQLCol]) -> None:
         if isinstance(value, SQLCol):
             value = [value]
-            return 
+            return
         elif not isinstance(value, list):
             raise TypeError("Conflict columns must be a list of SQLCol objects.")
         validate_monolist(*value, monotype=SQLCol)
         conflict_cols = [ensure_col(col) for col in value]
         self._conflict_cols = conflict_cols
+
     def __repr__(self):
         return f"<OnConflictQuery do_what='{self.do_what}'>"
 
@@ -123,12 +148,15 @@ class OnConflictQuery:
             raise TypeError("Condition must be an instance of SQLCondition.")
         self.condition = condition
         return self
-    def DO(self, do_what:str) -> "OnConflictQuery":
+
+    def DO(self, do_what: str) -> "OnConflictQuery":
         if do_what.upper() not in self.valid_do_what:
-            raise ValueError(f"Invalid action: {do_what}. Valid actions are: {self.valid_do_what}")
+            raise ValueError(
+                f"Invalid action: {do_what}. Valid actions are: {self.valid_do_what}"
+            )
         self.do_what = do_what.upper()
         return self
-    
+
     def SET(self, *args, **kwargs) -> "OnConflictQuery":
         if not args and not kwargs:
             return self
@@ -138,7 +166,7 @@ class OnConflictQuery:
         for arg in args:
             if isinstance(arg, dict):
                 set_dict.update(arg)
-            elif isinstance(arg, (tuple,list)) and len(arg) == 2:
+            elif isinstance(arg, (tuple, list)) and len(arg) == 2:
                 if isinstance(arg[0], SQLCol):
                     set_dict[arg[0].expression_value] = arg[1]
                     continue
@@ -147,7 +175,7 @@ class OnConflictQuery:
         self.set_clauses = set_dict
         print(set_dict)
         return self
-    
+
     def placeholder_pair(self) -> str:
         """
         Returns a string representation of the ON CONFLICT clause.
@@ -165,6 +193,4 @@ class OnConflictQuery:
             on_conflict_clause = f'ON CONFLICT ({", ".join([col.expression_value for col in self.conflict_cols])}) DO UPDATE {set_clause}{condition_clause}'
             return on_conflict_clause, injections
         else:
-            raise ValueError(f"Unknown conflict action: {self.do_what}") 
-        
-
+            raise ValueError(f"Unknown conflict action: {self.do_what}")

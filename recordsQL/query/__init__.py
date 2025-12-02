@@ -1,4 +1,4 @@
-#QueryBuilds/query/record_queries/__init__.py
+# QueryBuilds/query/record_queries/__init__.py
 from .select import SELECT, SelectQuery, WITH, WithQuery, JoinQuery
 from .insert import INSERT, InsertQuery, OnConflictQuery
 from .update import UPDATE, UpdateQuery
@@ -22,5 +22,5 @@ __all__ = [
     "CountQuery",
     "COUNT",
     "ExistsQuery",
-    "EXISTS"
+    "EXISTS",
 ]

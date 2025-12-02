@@ -12,8 +12,8 @@ class TestUpdateBasic:
         query = UPDATE("users").SET(name="John Doe")
         sql, params = query.placeholder_pair()
         assert 'UPDATE "users"' in sql
-        assert 'SET' in sql
-        assert 'name = ?' in sql
+        assert "SET" in sql
+        assert "name = ?" in sql
         assert params == ["John Doe"]
 
     def test_update_multiple_fields(self):
@@ -21,10 +21,10 @@ class TestUpdateBasic:
         query = UPDATE("users").SET(name="John Doe", age=30, email="john@example.com")
         sql, params = query.placeholder_pair()
         assert 'UPDATE "users"' in sql
-        assert 'SET' in sql
-        assert 'name = ?' in sql
-        assert 'age = ?' in sql
-        assert 'email = ?' in sql
+        assert "SET" in sql
+        assert "name = ?" in sql
+        assert "age = ?" in sql
+        assert "email = ?" in sql
         assert "John Doe" in params
         assert 30 in params
         assert "john@example.com" in params
@@ -34,9 +34,9 @@ class TestUpdateBasic:
         query = UPDATE("users").SET(name="Jane Doe").WHERE(col("id") == 1)
         sql, params = query.placeholder_pair()
         assert 'UPDATE "users"' in sql
-        assert 'SET name = ?' in sql
-        assert 'WHERE' in sql
-        assert 'id = ?' in sql
+        assert "SET name = ?" in sql
+        assert "WHERE" in sql
+        assert "id = ?" in sql
         assert "Jane Doe" in params
         assert 1 in params
 
@@ -44,10 +44,12 @@ class TestUpdateBasic:
         """Test UPDATE with multiple WHERE conditions"""
         age = col("age")
         active = col("active")
-        query = UPDATE("users").SET(status="senior").WHERE((age > 50) & (active == True))
+        query = (
+            UPDATE("users").SET(status="senior").WHERE((age > 50) & (active == True))
+        )
         sql, params = query.placeholder_pair()
         assert 'UPDATE "users"' in sql
-        assert 'WHERE' in sql
+        assert "WHERE" in sql
         assert "senior" in params
         assert 50 in params
         assert True in params
@@ -67,8 +69,8 @@ class TestUpdateAdvanced:
         )
         sql, params = query.placeholder_pair()
         assert 'UPDATE "users"' in sql
-        assert 'RETURNING' in sql
-        assert 'id' in sql
+        assert "RETURNING" in sql
+        assert "id" in sql
         assert "John Doe" in params
         assert 30 in params
         assert 5 in params
@@ -76,12 +78,14 @@ class TestUpdateAdvanced:
     def test_update_with_complex_where(self):
         """Test UPDATE with complex WHERE conditions"""
         age, salary, department = cols("age", "salary", "department")
-        query = UPDATE("employees").SET(bonus=5000).WHERE(
-            ((age > 30) & (salary < 80000)) | (department == "Sales")
+        query = (
+            UPDATE("employees")
+            .SET(bonus=5000)
+            .WHERE(((age > 30) & (salary < 80000)) | (department == "Sales"))
         )
         sql, params = query.placeholder_pair()
         assert 'UPDATE "employees"' in sql
-        assert 'WHERE' in sql
+        assert "WHERE" in sql
         assert 5000 in params
         assert 30 in params
         assert 80000 in params
@@ -97,7 +101,7 @@ class TestUpdateAdvanced:
         query = UPDATE("products").SET(on_sale=True).WHERE(price < 50)
         sql, params = query.placeholder_pair()
         assert 'UPDATE "products"' in sql
-        assert 'WHERE' in sql
+        assert "WHERE" in sql
         assert True in params
         assert 50 in params
 
@@ -107,7 +111,7 @@ class TestUpdateAdvanced:
         query = UPDATE("products").SET(featured=True).WHERE(category == "Electronics")
         sql, params = query.placeholder_pair()
         assert 'UPDATE "products"' in sql
-        assert 'WHERE' in sql
+        assert "WHERE" in sql
         assert True in params
         assert "Electronics" in params
 
@@ -116,9 +120,9 @@ class TestUpdateAdvanced:
         query = UPDATE("users").SET(notification_enabled=True)
         sql, params = query.placeholder_pair()
         assert 'UPDATE "users"' in sql
-        assert 'SET' in sql
+        assert "SET" in sql
         # Should not have WHERE clause
-        assert 'WHERE' not in sql
+        assert "WHERE" not in sql
         assert params == [True]
 
     def test_update_boolean_fields(self):
@@ -136,9 +140,11 @@ class TestUpdateAdvanced:
 
     def test_update_with_returning_all(self):
         """Test UPDATE with RETURNING *"""
-        query = UPDATE("users").SET(status="active").WHERE(col("id") == 20).RETURNING("*")
+        query = (
+            UPDATE("users").SET(status="active").WHERE(col("id") == 20).RETURNING("*")
+        )
         sql, params = query.placeholder_pair()
         assert 'UPDATE "users"' in sql
-        assert 'RETURNING' in sql
+        assert "RETURNING" in sql
         assert "active" in params
         assert 20 in params

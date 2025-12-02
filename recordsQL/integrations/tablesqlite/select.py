@@ -1,22 +1,38 @@
-
 from tablesqlite import SQLTableInfo
 from ...query import (
-                     SelectQuery, SELECT, WithQuery, JoinQuery,
+    SelectQuery,
+    SELECT,
+    WithQuery,
+    JoinQuery,
 )
 from ...types import SQLCol
 from typing import Union, List, Any, Optional
 from ...dependencies import SQLCondition
 
-def select_query_for(table: SQLTableInfo, columns: Union[str, list[SQLCol]] = "*",
-                    condition: SQLCondition = None, order_by: Optional[List[Any]] = None,
-                    criteria: List[str] = None, limit: Optional[Union[int, str]] = None,
-                    offset: Optional[Union[int, str]] = None, group_by: Union[Any, list, None] = None,
-                    having: Optional[Any] = None, *,
-                    joins: List[JoinQuery] = None, withs: Optional[List[WithQuery]] = None,
-                    ) -> SelectQuery:
-    
-    #Cant apply if_column_exists here, because columns can be any expression
-    sq = SELECT(*columns).FROM(table.name).WHERE(condition).LIMIT(limit).OFFSET(offset).HAVING(having)
+
+def select_query_for(
+    table: SQLTableInfo,
+    columns: Union[str, list[SQLCol]] = "*",
+    condition: SQLCondition = None,
+    order_by: Optional[List[Any]] = None,
+    criteria: List[str] = None,
+    limit: Optional[Union[int, str]] = None,
+    offset: Optional[Union[int, str]] = None,
+    group_by: Union[Any, list, None] = None,
+    having: Optional[Any] = None,
+    *,
+    joins: List[JoinQuery] = None,
+    withs: Optional[List[WithQuery]] = None,
+) -> SelectQuery:
+    # Cant apply if_column_exists here, because columns can be any expression
+    sq = (
+        SELECT(*columns)
+        .FROM(table.name)
+        .WHERE(condition)
+        .LIMIT(limit)
+        .OFFSET(offset)
+        .HAVING(having)
+    )
     sq.order_by = order_by
     sq.criteria = criteria
     sq.group_by = group_by
@@ -25,14 +41,20 @@ def select_query_for(table: SQLTableInfo, columns: Union[str, list[SQLCol]] = "*
     return sq
 
 
-
-
-def select_query(self: SQLTableInfo, columns: Union[str, list[SQLCol]] = "*",
-                 condition: Any = None, order_by: Optional[List[Any]] = None,
-                 criteria: List[str] = None, limit: Optional[Union[int, str]] = None,
-                 offset: Optional[Union[int, str]] = None, group_by: Union[Any, list, None] = None,
-                 having: Optional[Any] = None, *,
-                 joins: List[Any] = None, withs: Optional[List[WithQuery]] = None) -> SelectQuery:
+def select_query(
+    self: SQLTableInfo,
+    columns: Union[str, list[SQLCol]] = "*",
+    condition: Any = None,
+    order_by: Optional[List[Any]] = None,
+    criteria: List[str] = None,
+    limit: Optional[Union[int, str]] = None,
+    offset: Optional[Union[int, str]] = None,
+    group_by: Union[Any, list, None] = None,
+    having: Optional[Any] = None,
+    *,
+    joins: List[Any] = None,
+    withs: Optional[List[WithQuery]] = None,
+) -> SelectQuery:
     """
     Create a SELECT query for the table with the provided parameters.
     """

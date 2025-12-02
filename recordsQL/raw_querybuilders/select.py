@@ -1,13 +1,21 @@
-#record_queries/select.py
+# record_queries/select.py
 
 from typing import List, Tuple, Any, Optional, Union
 from ..dependencies import SQLCondition, SQLExpression
 from ..utils import All, quote_str
-from .formatters import (SQLCol, SQLOrderBy,
-                         collect_column_placeholders, _format_conditions, _format_group_by,
-    _format_having, _format_limit_offset, _format_order_by, _format_table_name
+from .formatters import (
+    SQLCol,
+    SQLOrderBy,
+    collect_column_placeholders,
+    _format_conditions,
+    _format_group_by,
+    _format_having,
+    _format_limit_offset,
+    _format_order_by,
+    _format_table_name,
 )
 from ..validators import validate_name
+
 
 def build_select_query(
     table_name: str,
@@ -22,8 +30,9 @@ def build_select_query(
     joins: Optional[List["JoinQuery"]] = None,  # type hint correction
     ignore_forbidden_chars: bool = False,
 ) -> Tuple[str, List[Any]]:
-
-    columns_str, column_placeholders = collect_column_placeholders(columns, ignore_forbidden_chars)
+    columns_str, column_placeholders = collect_column_placeholders(
+        columns, ignore_forbidden_chars
+    )
 
     where_clause, where_params = _format_conditions(condition)
     group_by_clause = _format_group_by(group_by, ignore_forbidden_chars)
@@ -44,14 +53,22 @@ def build_select_query(
     return query, all_params
 
 
-
 class JoinQuery:
-    def __init__(self, table_name: str, on: SQLCondition, join_type: str = "INNER", alias: Optional[str] = None, ignore_forbidden_chars: bool = False):
+    def __init__(
+        self,
+        table_name: str,
+        on: SQLCondition,
+        join_type: str = "INNER",
+        alias: Optional[str] = None,
+        ignore_forbidden_chars: bool = False,
+    ):
         join_type = join_type.upper()
         if join_type not in {"INNER", "LEFT", "RIGHT", "FULL", "CROSS"}:
             raise ValueError(f"Unsupported join type: {join_type}")
 
-        validate_name(table_name, validate_chars=not ignore_forbidden_chars, allow_digit=True)
+        validate_name(
+            table_name, validate_chars=not ignore_forbidden_chars, allow_digit=True
+        )
         if alias:
             validate_name(alias, validate_chars=not ignore_forbidden_chars)
 
@@ -63,11 +80,14 @@ class JoinQuery:
 
     def placeholder_pair(self) -> Tuple[str, List[Any]]:
         condition_str, params = self.on.placeholder_pair()
-        table_expr = _format_table_name(self.table_name, validate=not self.ignore_forbidden_chars)
+        table_expr = _format_table_name(
+            self.table_name, validate=not self.ignore_forbidden_chars
+        )
         if self.alias:
             table_expr = f"{table_expr} AS {self.alias}"
 
         return f"{self.join_type} JOIN {table_expr} ON {condition_str}", params
+
 
 def _format_joins(joins: Optional[List[JoinQuery]]) -> Tuple[str, List[Any]]:
     if not joins:

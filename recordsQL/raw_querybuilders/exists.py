@@ -1,11 +1,12 @@
 from typing import Tuple, Any
 from .select import build_select_query
 
+
 def build_exists_query(
     table_name: str,
-    condition = None,
-    group_by = None,
-    having = None,
+    condition=None,
+    group_by=None,
+    having=None,
 ) -> Tuple[str, list[Any]]:
     """
     Builds an EXISTS query.
@@ -26,31 +27,31 @@ def build_exists_query(
         columns="1",
         condition=condition,
         order_by=None,
-        limit=1,  
+        limit=1,
         offset=None,
         group_by=group_by,
         having=having,
-        ignore_forbidden_chars=True
+        ignore_forbidden_chars=True,
     )
 
     query = f"SELECT EXISTS({select_sql})"
 
     return query, params
 
+
 def _example():
     from expressQL import cols
+
     age = cols("age")[0]
     table = "employees"
 
     condition = age > 60
 
-    query, params = build_exists_query(
-        table_name=table,
-        condition=condition
-    )
+    query, params = build_exists_query(table_name=table, condition=condition)
 
     print(query)
     print("Params:", params)
+
 
 if __name__ == "__main__":
     _example()
