@@ -104,6 +104,7 @@ class TestDeleteAdvanced:
         sql, params = query.placeholder_pair()
         assert 'DELETE FROM "users"' in sql
         assert "WHERE" in sql
+        assert "IS NULL" in sql
 
     def test_delete_with_not_equal(self):
         """Test DELETE with not equal condition"""

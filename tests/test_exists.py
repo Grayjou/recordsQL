@@ -132,6 +132,7 @@ class TestExistsAdvanced:
         sql, params = query.placeholder_pair()
         assert "EXISTS" in sql
         assert "WHERE" in sql
+        assert "IS NULL" in sql
     def test_exists_with_greater_than_or_equal(self):
         """Test EXISTS with greater than or equal condition"""
         score = col("score")
