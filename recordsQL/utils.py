@@ -1,3 +1,21 @@
+"""
+Utility functions and classes for recordsQL.
+
+This module provides helper functions and utility classes used throughout
+the recordsQL library for various operations like type checking, string
+manipulation, and handling unknown values.
+
+Key Functions:
+    - is_collection: Check if an object is a collection
+    - is_unknown: Check if a value is Unknown
+    - quote_str: Quote a string with specified characters
+    - bracket_str: Enclose a string with brackets
+    - ensure_bracketed: Ensure a string is properly bracketed
+
+Key Classes:
+    - Unknown: Represents an unknown or unset value
+    - All: Represents all values (wildcard)
+"""
 from typing import Callable
 from dataclasses import dataclass
 from collections.abc import Iterable

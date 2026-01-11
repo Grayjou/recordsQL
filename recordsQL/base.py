@@ -1,3 +1,19 @@
+"""
+Base classes for recordsQL query builders.
+
+This module provides the foundational RecordQuery class that all query
+builders inherit from. It defines the common interface and functionality
+shared by SELECT, INSERT, UPDATE, DELETE, and other query types.
+
+Key Classes:
+    - RecordQuery: Base class for all query builders
+
+The RecordQuery class provides:
+    - Table name validation
+    - Query building interface
+    - Placeholder parameter generation
+    - Query copying and modification
+"""
 from .dependencies import SQLExpression
 from typing import Union, Iterable, List, Dict, Any, Tuple, Optional
 from .validators import validate_name
