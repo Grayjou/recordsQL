@@ -20,6 +20,8 @@ from .types import SQLCol, SQLInput, SQLOrderBy
 
 from .dependencies import cols, col, text, set_expr, num
 
+__version__ = "0.1.0"
+
 __all__ = [
     # Query builders
     "SELECT",
