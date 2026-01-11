@@ -123,11 +123,14 @@ WITH Query with JOINs
    )
 
    # Create the main query with JOIN
+   # Join on the store_id column from the stores table
+   current_store_id = num(12345)
+   
    query = WITH(inner_query.AS("high_value_customers")).SELECT(
        name, age, email
    ).FROM("high_value_customers").INNER_JOIN(
        table_name="stores",
-       on=(store_id == col("store_id"))
+       on=(current_store_id == col("store_id"))
    )
 
    sql, params = query.placeholder_pair()

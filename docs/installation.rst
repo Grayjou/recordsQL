@@ -17,6 +17,9 @@ The easiest way to install recordsQL is using pip:
    pip install expressQL
    pip install recordsQL
 
+.. note::
+   If recordsQL is not yet published to PyPI, please install from source (see below).
+
 Installing from Source
 ----------------------
 
