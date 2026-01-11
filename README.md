@@ -176,6 +176,32 @@ Placeholders:
 
 ## 📖 Documentation
 
-For more details, explore the source code to understand the full capabilities of **recordsQL**.
+Full documentation is available and includes:
+
+- **Installation Guide**: Detailed installation instructions
+- **Quick Start**: Get started with recordsQL in minutes
+- **Advanced Examples**: Complex query patterns and best practices
+- **API Reference**: Complete API documentation with type hints
+
+### Building Documentation Locally
+
+To build the documentation locally:
+
+```bash
+cd docs
+poetry run sphinx-build -b html . _build/html
+```
+
+Or using make:
+
+```bash
+cd docs
+make html  # On Unix/Linux/macOS
+make.bat html  # On Windows
+```
+
+The generated documentation will be in `docs/_build/html/`. Open `index.html` in your browser to view it.
+
+For more details on contributing to documentation, see [docs/README.md](docs/README.md).
 
 
