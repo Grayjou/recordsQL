@@ -1,6 +1,6 @@
 """Tests for EXISTS queries"""
 import pytest
-from recordsQL import EXISTS, col, cols, text
+from recordsql import EXISTS, col, cols, text
 
 
 @pytest.mark.exists

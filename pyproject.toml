@@ -5,9 +5,9 @@ description = "A Python-based SQL query builder with a fluent and composable int
 authors = ["Grayjou <cgrayjou@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/Grayjou/recordsQL"
-repository = "https://github.com/Grayjou/recordsQL"
-documentation = "https://github.com/Grayjou/recordsQL#readme"
+homepage = "https://github.com/Grayjou/recordsql"
+repository = "https://github.com/Grayjou/recordsql"
+documentation = "https://github.com/Grayjou/recordsql#readme"
 keywords = [
     "SQL", 
     "query-builder", 
@@ -33,7 +33,7 @@ classifiers = [
     "Topic :: Database",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-packages = [{include = "recordsQL"}]
+packages = [{include = "recordsql"}]
 
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"

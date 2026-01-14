@@ -1,7 +1,7 @@
 API Reference
 =============
 
-This page provides detailed API documentation for all recordsQL classes and functions.
+This page provides detailed API documentation for all recordsql classes and functions.
 
 Query Builders
 --------------
@@ -9,24 +9,24 @@ Query Builders
 SELECT Query
 ~~~~~~~~~~~~
 
-.. autoclass:: recordsQL.SelectQuery
+.. autoclass:: recordsql.SelectQuery
    :members:
    :inherited-members:
    :special-members: __init__
 
-.. autofunction:: recordsQL.SELECT
+.. autofunction:: recordsql.SELECT
 
 INSERT Query
 ~~~~~~~~~~~~
 
-.. autoclass:: recordsQL.InsertQuery
+.. autoclass:: recordsql.InsertQuery
    :members:
    :inherited-members:
    :special-members: __init__
 
-.. autofunction:: recordsQL.INSERT
+.. autofunction:: recordsql.INSERT
 
-.. autoclass:: recordsQL.OnConflictQuery
+.. autoclass:: recordsql.OnConflictQuery
    :members:
    :inherited-members:
    :special-members: __init__
@@ -34,57 +34,57 @@ INSERT Query
 UPDATE Query
 ~~~~~~~~~~~~
 
-.. autoclass:: recordsQL.UpdateQuery
+.. autoclass:: recordsql.UpdateQuery
    :members:
    :inherited-members:
    :special-members: __init__
 
-.. autofunction:: recordsQL.UPDATE
+.. autofunction:: recordsql.UPDATE
 
 DELETE Query
 ~~~~~~~~~~~~
 
-.. autoclass:: recordsQL.DeleteQuery
+.. autoclass:: recordsql.DeleteQuery
    :members:
    :inherited-members:
    :special-members: __init__
 
-.. autofunction:: recordsQL.DELETE
+.. autofunction:: recordsql.DELETE
 
 COUNT Query
 ~~~~~~~~~~~
 
-.. autoclass:: recordsQL.CountQuery
+.. autoclass:: recordsql.CountQuery
    :members:
    :inherited-members:
    :special-members: __init__
 
-.. autofunction:: recordsQL.COUNT
+.. autofunction:: recordsql.COUNT
 
 EXISTS Query
 ~~~~~~~~~~~~
 
-.. autoclass:: recordsQL.ExistsQuery
+.. autoclass:: recordsql.ExistsQuery
    :members:
    :inherited-members:
    :special-members: __init__
 
-.. autofunction:: recordsQL.EXISTS
+.. autofunction:: recordsql.EXISTS
 
 WITH Query (CTEs)
 ~~~~~~~~~~~~~~~~~
 
-.. autoclass:: recordsQL.WithQuery
+.. autoclass:: recordsql.WithQuery
    :members:
    :inherited-members:
    :special-members: __init__
 
-.. autofunction:: recordsQL.WITH
+.. autofunction:: recordsql.WITH
 
 JOIN Query
 ~~~~~~~~~~
 
-.. autoclass:: recordsQL.JoinQuery
+.. autoclass:: recordsql.JoinQuery
    :members:
    :inherited-members:
    :special-members: __init__
@@ -92,15 +92,15 @@ JOIN Query
 Type Definitions
 ----------------
 
-.. autoclass:: recordsQL.SQLCol
+.. autoclass:: recordsql.SQLCol
    :members:
    :inherited-members:
 
-.. autoclass:: recordsQL.SQLInput
+.. autoclass:: recordsql.SQLInput
    :members:
    :inherited-members:
 
-.. autoclass:: recordsQL.SQLOrderBy
+.. autoclass:: recordsql.SQLOrderBy
    :members:
    :inherited-members:
 
@@ -110,15 +110,15 @@ Helper Functions
 Column and Value Helpers
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. autofunction:: recordsQL.cols
+.. autofunction:: recordsql.cols
 
-.. autofunction:: recordsQL.col
+.. autofunction:: recordsql.col
 
-.. autofunction:: recordsQL.text
+.. autofunction:: recordsql.text
 
-.. autofunction:: recordsQL.num
+.. autofunction:: recordsql.num
 
-.. autofunction:: recordsQL.set_expr
+.. autofunction:: recordsql.set_expr
 
 Base Classes
 ------------
@@ -126,7 +126,7 @@ Base Classes
 RecordQuery
 ~~~~~~~~~~~
 
-.. autoclass:: recordsQL.base.RecordQuery
+.. autoclass:: recordsql.base.RecordQuery
    :members:
    :inherited-members:
    :special-members: __init__

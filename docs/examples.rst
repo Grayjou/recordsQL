@@ -1,7 +1,7 @@
 Advanced Examples
 =================
 
-This page demonstrates advanced usage patterns and features of recordsQL.
+This page demonstrates advanced usage patterns and features of recordsql.
 
 Complex SELECT Queries
 ----------------------
@@ -11,7 +11,7 @@ Using ORDER BY, LIMIT, and OFFSET
 
 .. code-block:: python
 
-   from recordsQL import SELECT, cols, col
+   from recordsql import SELECT, cols, col
 
    name, age, email = cols("name", "age", "email")
 
@@ -30,7 +30,7 @@ Multiple ORDER BY Clauses
 
 .. code-block:: python
 
-   from recordsQL import SELECT, cols
+   from recordsql import SELECT, cols
 
    name, age, created_at = cols("name", "age", "created_at")
 
@@ -51,7 +51,7 @@ INNER JOIN Example
 
 .. code-block:: python
 
-   from recordsQL import SELECT, cols, col
+   from recordsql import SELECT, cols, col
 
    name, email, order_id = cols("name", "email", "order_id")
 
@@ -69,7 +69,7 @@ Multiple JOINs
 
 .. code-block:: python
 
-   from recordsQL import SELECT, cols, col
+   from recordsql import SELECT, cols, col
 
    name, product_name, quantity = cols("name", "product_name", "quantity")
 
@@ -93,7 +93,7 @@ Basic WITH Query
 
 .. code-block:: python
 
-   from recordsQL import WITH, SELECT, cols
+   from recordsql import WITH, SELECT, cols
 
    name, age = cols("name", "age")
 
@@ -112,7 +112,7 @@ WITH Query with JOINs
 
 .. code-block:: python
 
-   from recordsQL import WITH, SELECT, cols, col, num
+   from recordsql import WITH, SELECT, cols, col, num
 
    name, age, email, total_purchases = cols("name", "age", "email", "total_purchases")
    store_id = num(12345)
@@ -145,7 +145,7 @@ Upsert Pattern (PostgreSQL)
 
 .. code-block:: python
 
-   from recordsQL import INSERT, col
+   from recordsql import INSERT, col
 
    query = INSERT("user_id", "name", "email").INTO("users").VALUES(
        (1, "John Doe", "john@example.com")
@@ -164,7 +164,7 @@ INSERT with WHERE Condition on Conflict
 
 .. code-block:: python
 
-   from recordsQL import INSERT, col
+   from recordsql import INSERT, col
 
    query = INSERT("user_id", "status").INTO("users").VALUES(
        (1, "active")
@@ -187,7 +187,7 @@ Using Logical Operators
 
 .. code-block:: python
 
-   from recordsQL import SELECT, cols, col, text
+   from recordsql import SELECT, cols, col, text
 
    name, age, status, created_at = cols("name", "age", "status", "created_at")
 
@@ -206,7 +206,7 @@ Using DATETIME Functions
 
 .. code-block:: python
 
-   from recordsQL import SELECT, cols, col, text
+   from recordsql import SELECT, cols, col, text
 
    name, signup_date = cols("name", "signup_date")
 
@@ -226,7 +226,7 @@ Using GROUP BY and HAVING
 
 .. code-block:: python
 
-   from recordsQL import COUNT, cols
+   from recordsql import COUNT, cols
 
    user_id, total_purchases = cols("user_id", "total_purchases")
 
@@ -246,7 +246,7 @@ Checking for Record Existence
 
 .. code-block:: python
 
-   from recordsQL import EXISTS, col
+   from recordsql import EXISTS, col
 
    query = EXISTS().FROM("users").WHERE(
        (col("email") == "john@example.com") &
@@ -267,7 +267,7 @@ Getting Updated Values
 
 .. code-block:: python
 
-   from recordsQL import UPDATE, col
+   from recordsql import UPDATE, col
 
    query = UPDATE("users").SET(
        name="John Doe",

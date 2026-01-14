@@ -1,6 +1,6 @@
 """Tests for JOIN operations"""
 import pytest
-from recordsQL import SELECT, WITH, cols, col, num
+from recordsql import SELECT, WITH, cols, col, num
 
 
 @pytest.mark.join

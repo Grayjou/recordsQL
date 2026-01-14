@@ -1,6 +1,6 @@
 """Tests for WITH (CTE) queries"""
 import pytest
-from recordsQL import WITH, SELECT, cols, col, text
+from recordsql import WITH, SELECT, cols, col, text
 
 
 @pytest.mark.with_query

@@ -1,6 +1,6 @@
 """Tests for SELECT queries"""
 import pytest
-from recordsQL import SELECT, cols, col, text, num
+from recordsql import SELECT, cols, col, text, num
 
 
 @pytest.mark.select
@@ -171,7 +171,7 @@ class TestSelectWithFunc:
 
     def test_select_single_func(self):
         """Test SELECT with single Func expression"""
-        from recordsQL import Func
+        from recordsql import Func
         
         query = SELECT(Func('MAX', col('confession_id'))).FROM('confessions').WHERE(col('guild_id') == 123)
         sql, params = query.placeholder_pair()
@@ -182,7 +182,7 @@ class TestSelectWithFunc:
 
     def test_select_multiple_funcs(self):
         """Test SELECT with multiple Func expressions"""
-        from recordsQL import Func
+        from recordsql import Func
         
         query = SELECT(Func('MAX', col('id')), Func('MIN', col('id')), col('name')).FROM('users')
         sql, params = query.placeholder_pair()
@@ -192,7 +192,7 @@ class TestSelectWithFunc:
 
     def test_select_func_with_group_by(self):
         """Test SELECT with Func and GROUP BY"""
-        from recordsQL import Func
+        from recordsql import Func
         
         query = SELECT(col('guild_id'), Func('COUNT', col('id'))).FROM('confessions').GROUP_BY(col('guild_id'))
         sql, params = query.placeholder_pair()
@@ -202,8 +202,8 @@ class TestSelectWithFunc:
         assert params == []
 
     def test_select_func_imported_from_recordsql(self):
-        """Test that Func can be imported from recordsQL"""
-        from recordsQL import Func as RecordsFunc
+        """Test that Func can be imported from recordsql"""
+        from recordsql import Func as RecordsFunc
         
         query = SELECT(RecordsFunc('AVG', col('price'))).FROM('products')
         sql, params = query.placeholder_pair()

@@ -1,6 +1,6 @@
-# recordsQL Documentation
+# recordsql Documentation
 
-This directory contains the Sphinx documentation for recordsQL.
+This directory contains the Sphinx documentation for recordsql.
 
 ## Building the Documentation
 

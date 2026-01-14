@@ -1,12 +1,12 @@
 Quick Start Guide
 =================
 
-This guide will help you get started with recordsQL quickly.
+This guide will help you get started with recordsql quickly.
 
 Basic Concepts
 --------------
 
-recordsQL provides a fluent, chainable API for building SQL queries. Each query builder returns an object that you can chain methods on to build complex queries.
+recordsql provides a fluent, chainable API for building SQL queries. Each query builder returns an object that you can chain methods on to build complex queries.
 
 Key Functions
 ~~~~~~~~~~~~~
@@ -36,7 +36,7 @@ Building a Simple SELECT Query
 
 .. code-block:: python
 
-   from recordsQL import SELECT, cols
+   from recordsql import SELECT, cols
 
    # Define columns
    name, age, email = cols("name", "age", "email")
@@ -54,7 +54,7 @@ Adding WHERE Clauses
 
 .. code-block:: python
 
-   from recordsQL import SELECT, cols, col
+   from recordsql import SELECT, cols, col
 
    name, age = cols("name", "age")
 
@@ -74,7 +74,7 @@ Building an INSERT Query
 
 .. code-block:: python
 
-   from recordsQL import INSERT
+   from recordsql import INSERT
 
    # Build an INSERT query
    query = INSERT("name", "age", "email").INTO("users").VALUES(
@@ -91,7 +91,7 @@ Building an UPDATE Query
 
 .. code-block:: python
 
-   from recordsQL import UPDATE, col
+   from recordsql import UPDATE, col
 
    # Build an UPDATE query
    query = UPDATE("users").SET(
@@ -110,7 +110,7 @@ Building a DELETE Query
 
 .. code-block:: python
 
-   from recordsQL import DELETE, col
+   from recordsql import DELETE, col
 
    # Build a DELETE query
    query = DELETE().FROM("users").WHERE(col("user_id") == 123)
@@ -126,4 +126,4 @@ Next Steps
 
 - Check out the :doc:`examples` page for more advanced usage examples
 - Explore the :doc:`api` reference for complete documentation
-- Visit the `GitHub repository <https://github.com/Grayjou/recordsQL>`_ to contribute or report issues
+- Visit the `GitHub repository <https://github.com/Grayjou/recordsql>`_ to contribute or report issues

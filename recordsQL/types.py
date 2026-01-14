@@ -1,7 +1,7 @@
 """
-Type definitions for recordsQL.
+Type definitions for recordsql.
 
-This module defines common type aliases used throughout recordsQL for type hints
+This module defines common type aliases used throughout recordsql for type hints
 and improved code clarity.
 
 Type Aliases:

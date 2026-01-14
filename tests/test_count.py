@@ -1,6 +1,6 @@
 """Tests for COUNT queries"""
 import pytest
-from recordsQL import COUNT, col, cols, text
+from recordsql import COUNT, col, cols, text
 
 
 @pytest.mark.count

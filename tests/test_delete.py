@@ -1,6 +1,6 @@
 """Tests for DELETE queries"""
 import pytest
-from recordsQL import DELETE, col, cols, text
+from recordsql import DELETE, col, cols, text
 
 
 @pytest.mark.delete

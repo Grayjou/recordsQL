@@ -10,44 +10,44 @@ Requirements
 Installing from PyPI
 --------------------
 
-The easiest way to install recordsQL is using pip:
+The easiest way to install recordsql is using pip:
 
 .. code-block:: bash
 
    pip install expressQL
-   pip install recordsQL
+   pip install recordsql
 
 .. note::
-   If recordsQL is not yet published to PyPI, please install from source (see below).
+   If recordsql is not yet published to PyPI, please install from source (see below).
 
 Installing from Source
 ----------------------
 
-You can also install recordsQL from source:
+You can also install recordsql from source:
 
 .. code-block:: bash
 
-   git clone https://github.com/Grayjou/recordsQL.git
-   cd recordsQL
+   git clone https://github.com/Grayjou/recordsql.git
+   cd recordsql
    pip install .
 
 Development Installation
 ------------------------
 
-If you want to contribute to recordsQL, install it in development mode with all dependencies:
+If you want to contribute to recordsql, install it in development mode with all dependencies:
 
 .. code-block:: bash
 
-   git clone https://github.com/Grayjou/recordsQL.git
-   cd recordsQL
+   git clone https://github.com/Grayjou/recordsql.git
+   cd recordsql
    poetry install
 
 Verifying Installation
 ----------------------
 
-To verify that recordsQL has been installed correctly, you can run:
+To verify that recordsql has been installed correctly, you can run:
 
 .. code-block:: python
 
-   import recordsQL
-   print(recordsQL.__version__)
+   import recordsql
+   print(recordsql.__version__)

@@ -1,7 +1,7 @@
-Welcome to recordsQL Documentation!
+Welcome to recordsql Documentation!
 ====================================
 
-**recordsQL** is a Python-based SQL query builder that offers a fluent and composable interface for generating complex SQL statements — safely and efficiently.
+**recordsql** is a Python-based SQL query builder that offers a fluent and composable interface for generating complex SQL statements — safely and efficiently.
 
 .. toctree::
    :maxdepth: 2

@@ -1,8 +1,8 @@
 """
-Utility functions and classes for recordsQL.
+Utility functions and classes for recordsql.
 
 This module provides helper functions and utility classes used throughout
-the recordsQL library for various operations like type checking, string
+the recordsql library for various operations like type checking, string
 manipulation, and handling unknown values.
 
 Key Functions:

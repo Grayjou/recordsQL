@@ -1,5 +1,5 @@
 """
-Base classes for recordsQL query builders.
+Base classes for recordsql query builders.
 
 This module provides the foundational RecordQuery class that all query
 builders inherit from. It defines the common interface and functionality

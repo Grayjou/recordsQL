@@ -1,6 +1,6 @@
 """Tests for INSERT queries"""
 import pytest
-from recordsQL import INSERT, col
+from recordsql import INSERT, col
 
 
 @pytest.mark.insert

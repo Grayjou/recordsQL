@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### 🎉 Added
 
-- Initial release of `recordsQL`, a SQL query builder built on top of `expressQL`
+- Initial release of `recordsql`, a SQL query builder built on top of `expressQL`
 - Support for:
   - `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `WITH`
   - `INNER`, `LEFT`, `RIGHT`, and `FULL` joins
@@ -21,7 +21,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### 🧪 Examples
 
-- Demonstrative usage of `recordsQL` in `main.py`
+- Demonstrative usage of `recordsql` in `main.py`
 - Output preview using `.placeholder_pair()` method for SQL + parameters
 
 ---

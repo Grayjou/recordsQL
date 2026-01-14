@@ -1,5 +1,5 @@
 """
-Query builder module for recordsQL.
+Query builder module for recordsql.
 
 This module provides the main query builder classes and functions for creating
 SQL queries in a fluent, composable way.
@@ -13,7 +13,7 @@ Key Classes:
     - EXISTS, ExistsQuery: For EXISTS queries
 
 Example:
-    >>> from recordsQL import SELECT, cols
+    >>> from recordsql import SELECT, cols
     >>> name, age = cols("name", "age")
     >>> query = SELECT(name, age).FROM("users").WHERE(age > 18)
     >>> print(query.placeholder_pair())

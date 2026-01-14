@@ -1,6 +1,6 @@
 # Issues to Report to expressQL
 
-This document tracks test cases that were skipped or failed in recordsQL due to limitations in the expressQL library. These should be reported as issues or feature requests to the expressQL project.
+This document tracks test cases that were skipped or failed in recordsql due to limitations in the expressQL library. These should be reported as issues or feature requests to the expressQL project.
 
 ## 1. NULL Value Handling
 
@@ -61,7 +61,7 @@ def __eq__(self, other):
 
 **Expected Use Case:**
 ```python
-from recordsQL import UPDATE, set_expr, col
+from recordsql import UPDATE, set_expr, col
 
 # Want to increment a value
 query = UPDATE("products").SET(stock=set_expr("stock + ?", 10)).WHERE(
@@ -165,7 +165,7 @@ The main critical issue is **#1 (NULL handling)**, which prevents common SQL pat
 ## Reproduction
 
 To reproduce these issues:
-1. Clone recordsQL: `git clone https://github.com/Grayjou/recordsQL.git`
+1. Clone recordsql: `git clone https://github.com/Grayjou/recordsql.git`
 2. Install dependencies: `poetry install`
 3. Run the full test suite: `poetry run pytest tests/ -v`
 4. Check the skipped tests for expressQL limitations
@@ -174,4 +174,4 @@ To reproduce these issues:
 
 - Python: 3.8.1+
 - expressQL: ^0.2.4
-- recordsQL: 0.1.0
+- recordsql: 0.1.0

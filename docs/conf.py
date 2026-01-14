@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'recordsQL'
+project = 'recordsql'
 copyright = '2026, Grayjou'
 author = 'Grayjou'
 release = '0.1.0'
