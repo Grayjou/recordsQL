@@ -173,5 +173,5 @@ To reproduce these issues:
 ## Environment
 
 - Python: 3.8.1+
-- expressql: ^0.2.4
-- recordsql: 0.1.0
+- expressql: ^0.3.8
+- recordsql: 0.2.0
