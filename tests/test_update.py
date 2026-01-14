@@ -1,7 +1,6 @@
 """Tests for UPDATE queries"""
 import pytest
-from expressql import set_expr
-from recordsQL import UPDATE, col, cols
+from recordsQL import UPDATE, cols, col, set_expr
 
 
 @pytest.mark.update

@@ -18,7 +18,7 @@ from .query import (
 )
 from .types import SQLCol, SQLInput, SQLOrderBy
 
-from .dependencies import cols, col, text, set_expr, num
+from .dependencies import cols, col, text, set_expr, num, Func
 
 __version__ = "0.1.0"
 
@@ -51,4 +51,5 @@ __all__ = [
     "text",
     "set_expr",
     "num",
+    "Func",
 ]

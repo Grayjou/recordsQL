@@ -163,3 +163,50 @@ class TestSelectAdvanced:
         sql, params = query.placeholder_pair()
         assert "WHERE" in sql
         assert 99 in params
+
+
+@pytest.mark.select
+class TestSelectWithFunc:
+    """Test SELECT with Func expressions"""
+
+    def test_select_single_func(self):
+        """Test SELECT with single Func expression"""
+        from recordsQL import Func
+        
+        query = SELECT(Func('MAX', col('confession_id'))).FROM('confessions').WHERE(col('guild_id') == 123)
+        sql, params = query.placeholder_pair()
+        assert 'SELECT MAX(confession_id)' in sql
+        assert '"confessions"' in sql
+        assert 'WHERE guild_id = ?' in sql
+        assert params == [123]
+
+    def test_select_multiple_funcs(self):
+        """Test SELECT with multiple Func expressions"""
+        from recordsQL import Func
+        
+        query = SELECT(Func('MAX', col('id')), Func('MIN', col('id')), col('name')).FROM('users')
+        sql, params = query.placeholder_pair()
+        assert 'SELECT MAX(id), MIN(id), name' in sql
+        assert '"users"' in sql
+        assert params == []
+
+    def test_select_func_with_group_by(self):
+        """Test SELECT with Func and GROUP BY"""
+        from recordsQL import Func
+        
+        query = SELECT(col('guild_id'), Func('COUNT', col('id'))).FROM('confessions').GROUP_BY(col('guild_id'))
+        sql, params = query.placeholder_pair()
+        assert 'SELECT guild_id, COUNT(id)' in sql
+        assert '"confessions"' in sql
+        assert 'GROUP BY guild_id' in sql
+        assert params == []
+
+    def test_select_func_imported_from_recordsql(self):
+        """Test that Func can be imported from recordsQL"""
+        from recordsQL import Func as RecordsFunc
+        
+        query = SELECT(RecordsFunc('AVG', col('price'))).FROM('products')
+        sql, params = query.placeholder_pair()
+        assert 'SELECT AVG(price)' in sql
+        assert '"products"' in sql
+        assert params == []
