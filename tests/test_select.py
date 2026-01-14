@@ -210,3 +210,11 @@ class TestSelectWithFunc:
         assert 'SELECT AVG(price)' in sql
         assert '"products"' in sql
         assert params == []
+    def test_select_accepts_list(self):
+        """Test SELECT accepts list of columns"""
+        columns = ["name", "age", "email"]
+        query = SELECT(*columns).FROM("users")
+        sql, params = query.placeholder_pair()
+        assert "SELECT name, age, email" in sql
+
+        assert params == []
