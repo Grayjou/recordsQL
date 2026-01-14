@@ -9,6 +9,7 @@ from .expressql import (
     num,
     text,
     set_expr,
+    Func,
 )
 
 __all__ = [
@@ -17,4 +18,5 @@ __all__ = [
     "SQLExpression",
     "ensure_sql_expression",
     "FalseCondition",
+    "Func",
 ]

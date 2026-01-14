@@ -9,4 +9,5 @@ from expressQL import (
     num,
     text,
     set_expr,
+    Func,
 )

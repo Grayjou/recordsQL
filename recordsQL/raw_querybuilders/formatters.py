@@ -70,12 +70,26 @@ def collect_column_placeholders(
 
 
 def _is_all_columns(columns):
-    return (
-        isinstance(columns, All)
-        or columns in (None, [], "*")
-        or list(columns) == ["*"]
-        or any(c in (None, [], "*") for c in columns)
-    )
+    # Check for explicit All type or standard "all columns" indicators
+    if isinstance(columns, All):
+        return True
+    
+    # Direct comparisons using 'is' and type checking to avoid SQLExpression __eq__ issues
+    if columns is None:
+        return True
+    if isinstance(columns, str) and columns == "*":
+        return True
+    if isinstance(columns, list) and len(columns) == 0:
+        return True
+    
+    # For list/tuple types, check if it's a single "*" string
+    if isinstance(columns, (list, tuple)):
+        if len(columns) == 1 and isinstance(columns[0], str) and columns[0] == "*":
+            return True
+        # Check if any element is None or a "*" string (avoid == for non-strings)
+        return any(c is None or (isinstance(c, str) and c == "*") for c in columns)
+    
+    return False
 
 
 def _format_columns(
