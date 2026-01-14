@@ -5,7 +5,7 @@ Requirements
 ------------
 
 - Python >= 3.8.1, < 4.0
-- expressQL >= 0.2.4
+- expressql >= 0.2.4
 
 Installing from PyPI
 --------------------
@@ -14,7 +14,7 @@ The easiest way to install recordsql is using pip:
 
 .. code-block:: bash
 
-   pip install expressQL
+   pip install expressql
    pip install recordsql
 
 .. note::

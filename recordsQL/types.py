@@ -9,7 +9,7 @@ Type Aliases:
     - SQLInput: Input type for SQL values
     - SQLOrderBy: Type for ORDER BY clauses
 """
-from expressQL import SQLExpression, SQLCondition, no_condition, ensure_sql_expression
+from expressql import SQLExpression, SQLCondition, no_condition, ensure_sql_expression
 from typing import Union, List, Dict, Any
 
 SQLCol = Union[str, SQLExpression]

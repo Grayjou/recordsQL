@@ -16,7 +16,7 @@ from .formatters import (
     ensure_list,
     _validate_col_names,
 )
-from expressQL.base import ensure_col
+from expressql.base import ensure_col
 from .utils import validate_monolist
 from .formatters import format_conditions
 from .formatters import quote_sandwich

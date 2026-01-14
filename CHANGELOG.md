@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### 🎉 Added
 
-- Initial release of `recordsql`, a SQL query builder built on top of `expressQL`
+- Initial release of `recordsql`, a SQL query builder built on top of `expressql`
 - Support for:
   - `SELECT`, `INSERT`, `UPDATE`, `DELETE`, `WITH`
   - `INNER`, `LEFT`, `RIGHT`, and `FULL` joins
