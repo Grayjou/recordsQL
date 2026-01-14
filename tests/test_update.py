@@ -1,7 +1,6 @@
 """Tests for UPDATE queries"""
 import pytest
 from recordsQL import UPDATE, cols, col, set_expr
-from recordsQL import UPDATE, col, cols
 
 
 @pytest.mark.update
