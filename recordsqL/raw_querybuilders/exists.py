@@ -40,7 +40,7 @@ def build_exists_query(
 
 
 def _example():
-    from expressQL import cols
+    from expressql import cols
 
     age = cols("age")[0]
     table = "employees"

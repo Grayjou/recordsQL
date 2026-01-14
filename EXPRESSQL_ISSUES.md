@@ -1,14 +1,14 @@
-# Issues to Report to expressQL
+# Issues to Report to expressql
 
-This document tracks test cases that were skipped or failed in recordsql due to limitations in the expressQL library. These should be reported as issues or feature requests to the expressQL project.
+This document tracks test cases that were skipped or failed in recordsql due to limitations in the expressql library. These should be reported as issues or feature requests to the expressql project.
 
 ## 1. NULL Value Handling
 
-**Issue:** The expressQL library cannot handle `None` (NULL) values in comparisons.
+**Issue:** The expressql library cannot handle `None` (NULL) values in comparisons.
 
 **Error:** `TypeError: float() argument must be a string or a real number, not 'NoneType'`
 
-**Location:** `expressQL/validators.py:9` in the `is_number()` function
+**Location:** `expressql/validators.py:9` in the `is_number()` function
 
 **Impact:** Cannot create queries with NULL checks, which are common in SQL:
 ```python
@@ -28,7 +28,7 @@ DELETE FROM "users" WHERE email IS NULL
 - `tests/test_update.py::TestUpdateAdvanced::test_update_null_value`
 
 **Suggested Fix:**
-The `is_number()` function in expressQL should handle None values gracefully:
+The `is_number()` function in expressql should handle None values gracefully:
 ```python
 def is_number(s):
     """
@@ -168,10 +168,10 @@ To reproduce these issues:
 1. Clone recordsql: `git clone https://github.com/Grayjou/recordsql.git`
 2. Install dependencies: `poetry install`
 3. Run the full test suite: `poetry run pytest tests/ -v`
-4. Check the skipped tests for expressQL limitations
+4. Check the skipped tests for expressql limitations
 
 ## Environment
 
 - Python: 3.8.1+
-- expressQL: ^0.3.8
+- expressql: ^0.3.8
 - recordsql: 0.2.0

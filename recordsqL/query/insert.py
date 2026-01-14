@@ -3,7 +3,7 @@ from ..base import RecordQuery
 from ..dependencies import SQLCondition, no_condition, SQLExpression
 from ..types import SQLInput
 
-# from expressQL import SQLCondition, SQLExpression, no_condition
+# from expressql import SQLCondition, SQLExpression, no_condition
 from ..raw_querybuilders import build_insert_query, OnConflictQuery
 from typing import List, Union, Iterable
 from ..types import SQLCol, SQLOrderBy

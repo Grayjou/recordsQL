@@ -1,4 +1,4 @@
-from expressQL import (
+from expressql import (
     SQLCondition,
     no_condition,
     SQLExpression,

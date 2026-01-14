@@ -8,7 +8,7 @@
 Install the required dependency and the pip package
 
 ```bash
-pip install expressQL
+pip install expressql
 pip install recordsql
 ```
 ## 🚀 Features
