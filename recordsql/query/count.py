@@ -3,7 +3,6 @@ from ..types import SQLCol
 from ..dependencies import SQLCondition, no_condition
 from ..raw_querybuilders import build_count_query
 from typing import Union, List, Tuple, Any, Optional
-from .utils import normalize_args
 
 
 class CountQuery(RecordQuery):

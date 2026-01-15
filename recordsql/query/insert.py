@@ -1,12 +1,12 @@
 from __future__ import annotations
 from ..base import RecordQuery
-from ..dependencies import SQLCondition, no_condition, SQLExpression
+from ..dependencies import SQLCondition, SQLExpression
 from ..types import SQLInput
 
 # from expressql import SQLCondition, SQLExpression, no_condition
 from ..raw_querybuilders import build_insert_query, OnConflictQuery
 from typing import List, Union, Iterable
-from ..types import SQLCol, SQLOrderBy
+from ..types import SQLCol
 from .utils import validate_monolist, normalize_args, is_pair, get_col_value
 from ..validators import validate_name
 

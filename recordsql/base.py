@@ -15,7 +15,7 @@ The RecordQuery class provides:
     - Query copying and modification
 """
 from .dependencies import SQLExpression
-from typing import Union, Iterable, List, Dict, Any, Tuple, Optional
+from typing import List, Any, Tuple, Optional
 from .validators import validate_name
 
 

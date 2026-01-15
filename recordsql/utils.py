@@ -16,7 +16,6 @@ Key Classes:
     - Unknown: Represents an unknown or unset value
     - All: Represents all values (wildcard)
 """
-from typing import Callable
 from dataclasses import dataclass
 from collections.abc import Iterable
 from types import GeneratorType

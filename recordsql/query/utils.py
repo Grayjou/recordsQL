@@ -1,7 +1,7 @@
 # query/utils.py
-from typing import Callable, Iterable, List, Any
+from typing import Callable, Iterable, Any
 from functools import wraps
-from typing import Type, Union, Iterable, get_args, get_origin
+from typing import Type, Union, get_args, get_origin
 from ..types import SQLCol, SQLExpression
 
 

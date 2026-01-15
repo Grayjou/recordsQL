@@ -1,6 +1,5 @@
 from typing import List, Tuple, Any, Optional, Union, Dict
 from ..dependencies import (
-    SQLExpression,
     SQLCondition,
     ensure_sql_expression,
     no_condition,
@@ -9,20 +8,15 @@ from .formatters import (
     SQLCol,
     _normalize_column,
     _format_table_name,
-    normalize_update_values,
     format_set_clause,
     _format_or_clause,
     _format_returning,
-    ensure_list,
     _validate_col_names,
 )
 from expressql.base import ensure_col
 from .utils import validate_monolist
 from .formatters import format_conditions
-from .formatters import quote_sandwich
 from .formatters import _all_have_same_keys
-from .formatters import _normalize_column
-from ..utils import All
 
 
 def build_insert_query(

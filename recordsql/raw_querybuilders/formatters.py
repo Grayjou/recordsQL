@@ -1,6 +1,7 @@
 # record_queries/formatters.py
 
 from typing import Dict, Any, List, Tuple, Union, Optional
+from collections.abc import Iterable
 from ..dependencies import (
     SQLCondition,
     SQLExpression,
@@ -218,9 +219,6 @@ def _format_conditions(
 
 
 format_conditions = _format_conditions
-
-from collections.abc import Iterable
-from typing import Any, List
 
 
 def ensure_list(

@@ -6,7 +6,7 @@ from typing import List, Optional, Union, Any, Iterable
 from ..base import RecordQuery
 from ..types import SQLCol
 from ..dependencies import SQLCondition, no_condition, SQLExpression
-from ..validators import validate_name, validate_table_name
+from ..validators import validate_name
 from .utils import normalize_args, enlist
 from ..utils import ensure_bracketed
 

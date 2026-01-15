@@ -18,5 +18,10 @@ __all__ = [
     "SQLExpression",
     "ensure_sql_expression",
     "FalseCondition",
+    "cols",
+    "col",
+    "num",
+    "text",
+    "set_expr",
     "Func",
 ]

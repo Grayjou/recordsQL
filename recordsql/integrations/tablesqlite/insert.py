@@ -4,7 +4,7 @@ from ...query import (
     INSERT,
     OnConflictQuery,
 )
-from ...types import SQLCol, SQLInput
+from ...types import SQLCol
 from typing import Union, Dict, Tuple, List, Any
 
 

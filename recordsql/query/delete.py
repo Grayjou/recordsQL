@@ -2,7 +2,7 @@ from ..base import RecordQuery
 from ..dependencies import SQLCondition, no_condition
 from ..types import SQLCol
 from ..raw_querybuilders import build_delete_query
-from typing import Optional, List, Tuple, Union, Any
+from typing import Optional, List, Tuple, Any
 from .utils import normalize_args
 
 
