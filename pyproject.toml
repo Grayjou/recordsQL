@@ -1,49 +1,50 @@
-[tool.poetry]
+[project]
 name = "recordsql"
 version = "0.2.0"
 description = "A Python-based SQL query builder with a fluent and composable interface, built on expressql."
-authors = ["Grayjou <cgrayjou@gmail.com>"]
-license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/Grayjou/recordsql"
-repository = "https://github.com/Grayjou/recordsql"
-documentation = "https://github.com/Grayjou/recordsql#readme"
+license = "MIT"
+authors = [
+    {name = "Grayjou", email = "cgrayjou@gmail.com"}
+]
 keywords = [
-    "SQL", 
-    "query-builder", 
-    "Python", 
-    "DSL", 
-    "expressql", 
-    "chained comparisons", 
-    "placeholder", 
-    "SQL conditions", 
-    "CTE", 
+    "SQL",
+    "query-builder",
+    "Python",
+    "DSL",
+    "expressql",
+    "chained comparisons",
+    "placeholder",
+    "SQL conditions",
+    "CTE",
     "JOIN"
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3.14", 
+    "Programming Language :: Python :: 3.14",
     "Topic :: Database",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-packages = [{include = "recordsql"}]
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "expressql>=1.0.0",
+]
 
-[tool.poetry.dependencies]
-python = ">=3.8.1,<4.0"
-expressql = "1.0.0"
-tablesqlite = {version = "^0.1.8", optional = true}
+[project.optional-dependencies]
+tablesqlite = [
+    "tablesqlite>=0.1.9",
+]
 
-[tool.poetry.extras]
-tablesqlite = ["tablesqlite"]
+[project.urls]
+homepage = "https://github.com/Grayjou/recordsql"
+repository = "https://github.com/Grayjou/recordsql"
+documentation = "https://github.com/Grayjou/recordsql#readme"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.0"
@@ -52,7 +53,6 @@ flake8 = "^6.0"
 sphinx = "^7.0"
 sphinx-rtd-theme = "^2.0"
 sphinx-autodoc-typehints = "^1.25"
-
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
