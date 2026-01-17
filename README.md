@@ -1,4 +1,10 @@
-# # 🧩 recordsql
+# 🧩 recordsql
+
+![Build Status](https://img.shields.io/github/actions/workflow/status/Grayjou/recordsql/python-package.yml?branch=main&label=tests)
+![PyPI version](https://img.shields.io/pypi/v/recordsql)
+![Python Version](https://img.shields.io/badge/python-3.9%20|%203.10%20|%203.11%20|%203.12%20|%203.13%20|%203.14-blue)
+![PyPI Downloads](https://img.shields.io/pypi/dm/recordsql)
+![License: MIT](https://img.shields.io/github/license/Grayjou/recordsql)
 
 **recordsql** is a Python-based SQL query builder that offers a fluent and composable interface for generating complex SQL statements — safely and efficiently.
 
