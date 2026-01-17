@@ -26,7 +26,7 @@ class TestDeleteBasic:
     def test_delete_with_multiple_conditions(self):
         """Test DELETE with multiple WHERE conditions"""
         age, active = cols("age", "active")
-        query = DELETE().FROM("users").WHERE((age < 18) | (active == False))
+        query = DELETE().FROM("users").WHERE((age < 18) | (active == False))  # noqa: E712
         sql, params = query.placeholder_pair()
         assert 'DELETE FROM "users"' in sql
         assert "WHERE" in sql
@@ -71,7 +71,7 @@ class TestDeleteAdvanced:
         """Test DELETE with OR conditions"""
         status, expired = cols("status", "expired")
         query = (
-            DELETE().FROM("sessions").WHERE((status == "invalid") | (expired == True))
+            DELETE().FROM("sessions").WHERE((status == "invalid") | (expired == True))  # noqa: E712
         )
         sql, params = query.placeholder_pair()
         assert 'DELETE FROM "sessions"' in sql
@@ -100,7 +100,7 @@ class TestDeleteAdvanced:
     def test_delete_with_null_check(self):
         # no longer unsupported
         """Test DELETE with NULL check"""
-        query = DELETE().FROM("users").WHERE(col("last_login") == None)
+        query = DELETE().FROM("users").WHERE(col("last_login") == None)  # noqa: E711
         sql, params = query.placeholder_pair()
         assert 'DELETE FROM "users"' in sql
         assert "WHERE" in sql

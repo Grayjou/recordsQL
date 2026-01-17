@@ -28,7 +28,7 @@ class TestCountBasic:
     def test_count_with_multiple_conditions(self):
         """Test COUNT with multiple WHERE conditions"""
         age, active = cols("age", "active")
-        query = COUNT().FROM("users").WHERE((age > 18) & (active == True))
+        query = COUNT().FROM("users").WHERE((age > 18) & (active == True))  # noqa: E712
         sql, params = query.placeholder_pair()
         assert "SELECT COUNT(*)" in sql
         assert "WHERE" in sql
@@ -97,7 +97,7 @@ class TestCountAdvanced:
     def test_count_with_or_conditions(self):
         """Test COUNT with OR conditions"""
         status, verified = cols("status", "verified")
-        query = COUNT().FROM("users").WHERE((status == "active") | (verified == True))
+        query = COUNT().FROM("users").WHERE((status == "active") | (verified == True))  # noqa: E712
         sql, params = query.placeholder_pair()
         assert "SELECT COUNT(*)" in sql
         assert "WHERE" in sql

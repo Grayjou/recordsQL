@@ -27,7 +27,7 @@ class TestExistsBasic:
     def test_exists_with_multiple_conditions(self):
         """Test EXISTS with multiple WHERE conditions"""
         age, active = cols("age", "active")
-        query = EXISTS().FROM("users").WHERE((age > 18) & (active == True))
+        query = EXISTS().FROM("users").WHERE((age > 18) & (active == True))  # noqa: E712
         sql, params = query.placeholder_pair()
         assert "EXISTS" in sql
         assert "WHERE" in sql
@@ -79,7 +79,7 @@ class TestExistsAdvanced:
     def test_exists_with_or_conditions(self):
         """Test EXISTS with OR conditions"""
         status, verified = cols("status", "verified")
-        query = EXISTS().FROM("users").WHERE((status == "active") | (verified == True))
+        query = EXISTS().FROM("users").WHERE((status == "active") | (verified == True))  # noqa: E712
         sql, params = query.placeholder_pair()
         assert "EXISTS" in sql
         assert "WHERE" in sql
@@ -128,7 +128,7 @@ class TestExistsAdvanced:
     def test_exists_with_null_check(self):
         """Test EXISTS with NULL check - skipped due to expressql limitation"""
         """No longer unsuported"""
-        query = EXISTS().FROM("users").WHERE(col("last_login") == None)
+        query = EXISTS().FROM("users").WHERE(col("last_login") == None)  # noqa: E711
         sql, params = query.placeholder_pair()
         assert "EXISTS" in sql
         assert "WHERE" in sql

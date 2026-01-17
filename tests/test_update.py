@@ -45,7 +45,7 @@ class TestUpdateBasic:
         age = col("age")
         active = col("active")
         query = (
-            UPDATE("users").SET(status="senior").WHERE((age > 50) & (active == True))
+            UPDATE("users").SET(status="senior").WHERE((age > 50) & (active == True))  # noqa: E712
         )
         sql, params = query.placeholder_pair()
         assert 'UPDATE "users"' in sql
@@ -144,7 +144,7 @@ class TestUpdateAdvanced:
 
     def test_update_null_value(self):
         """Test UPDATE with NULL value"""
-        query = UPDATE("users").SET(last_login=None).WHERE(col("email") == None)
+        query = UPDATE("users").SET(last_login=None).WHERE(col("email") == None)  # noqa: E711
         sql, params = query.placeholder_pair()
         assert 'UPDATE "users"' in sql
         assert "last_login = ?" in sql

@@ -128,7 +128,7 @@ class TestWithAdvanced:
         inner_query = (
             SELECT("name", "age", "status")
             .FROM("users")
-            .WHERE((age > 18) & (status == "active") & (verified == True))
+            .WHERE((age > 18) & (status == "active") & (verified == True))  # noqa: E712
         )
 
         with_query = (

@@ -36,7 +36,7 @@ class TestSelectBasic:
     def test_select_with_multiple_conditions(self):
         """Test SELECT with multiple WHERE conditions"""
         age, active = cols("age", "active")
-        query = SELECT("name").FROM("users").WHERE((age > 18) & (active == True))
+        query = SELECT("name").FROM("users").WHERE((age > 18) & (active == True))  # noqa: E712
         sql, params = query.placeholder_pair()
         assert "WHERE" in sql
         assert "?" in sql
