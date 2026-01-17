@@ -124,7 +124,7 @@ class OnConflictQuery:
 
     @conflict_cols.setter
     def conflict_cols(self, value: List[SQLCol]) -> None:
-        if isinstance(value, SQLCol):
+        if isinstance(value, (str, SQLExpression)):
             value = [value]
             return
         elif not isinstance(value, list):

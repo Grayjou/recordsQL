@@ -50,7 +50,7 @@ def collect_column_placeholders(
 ) -> List[str]:
     if _is_all_columns(columns):
         return "*", []
-    elif isinstance(columns, SQLCol):
+    elif isinstance(columns, (str, SQLExpression)):
         col_list = [columns]
     elif isinstance(columns, (list, tuple)):
         col_list = columns

@@ -1,6 +1,6 @@
 from ..base import RecordQuery
 from ..types import SQLCol, SQLInput
-from ..dependencies import SQLCondition, no_condition
+from ..dependencies import SQLCondition, no_condition, SQLExpression
 from typing import List, Tuple, Any, Union, Dict
 from ..validators import validate_name, validate_column_names
 from .utils import is_pair, get_col_value, normalize_args
@@ -24,7 +24,7 @@ class UpdateQuery(RecordQuery):
         self.condition = condition if isinstance(condition, SQLCondition) else no_condition
         if not ignore_forbidden_characters:
             validate_column_names(returning, allow_dot=True)
-        if isinstance(returning, SQLCol):
+        if isinstance(returning, (str, SQLExpression)):
             returning = [returning]
         self.returning = returning
 

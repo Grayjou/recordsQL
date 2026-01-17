@@ -225,7 +225,7 @@ class SelectQuery(RecordQuery):
                     collected_criteria.append(item.upper())
                 else:
                     collected_order_by.append(item)
-            elif isinstance(item, SQLOrderBy):
+            elif isinstance(item, (str, SQLExpression)):
                 collected_order_by.append(item)
         ob_len = len(collected_order_by)
         if ob_len == 0:
@@ -246,7 +246,7 @@ class SelectQuery(RecordQuery):
         return self
 
     def GROUP_BY(self, group_by: Union[SQLCol, List[SQLCol], None] = None):
-        if not isinstance(group_by, (SQLCol, list, tuple)):
+        if not isinstance(group_by, (str, SQLExpression, list, tuple)):
             raise TypeError("group_by must be an instance of SQLCol or list")
         self.group_by = group_by
         return self
@@ -692,7 +692,7 @@ class WithQuery:
             return query
         if not isinstance(query, SelectQuery):
             raise TypeError("query must be an instance of SelectQuery")
-        if not isinstance(alias, (SQLCol, type(None))):
+        if not isinstance(alias, (str, SQLExpression, type(None))):
             raise TypeError("alias must be an instance of SQLCol or None")
         query = query.copy()
         return super().__new__(cls)
