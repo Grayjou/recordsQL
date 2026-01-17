@@ -44,12 +44,15 @@ tablesqlite = {version = "^0.1.8", optional = true}
 
 [tool.poetry.extras]
 tablesqlite = ["tablesqlite"]
+
+[tool.poetry.group.dev.dependencies]
 pytest = "^7.0"
 black = "^23.0"
 flake8 = "^6.0"
 sphinx = "^7.0"
 sphinx-rtd-theme = "^2.0"
 sphinx-autodoc-typehints = "^1.25"
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
