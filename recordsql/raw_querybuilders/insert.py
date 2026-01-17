@@ -3,6 +3,7 @@ from ..dependencies import (
     SQLCondition,
     ensure_sql_expression,
     no_condition,
+    SQLExpression
 )
 from .formatters import (
     SQLCol,
