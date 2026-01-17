@@ -1,7 +1,9 @@
 try:
     from tablesqlite import SQLTableInfo
 except ImportError:
-    raise ImportError("tablesqlite is required for this integration. Please install it with: pip install recordsql[tablesqlite]")
+    raise ImportError(
+        "tablesqlite is required for this integration. Please install it with: pip install recordsql[tablesqlite]"
+    )
 from ...query import ExistsQuery, EXISTS
 from ...types import SQLCol
 from typing import List, Union, Optional
@@ -17,9 +19,7 @@ def exists_query_for(
     """
     Create a reference for an EXISTS query.
     """
-    return (
-        EXISTS(table_name=table.name).WHERE(condition).GROUP_BY(group_by).HAVING(having)
-    )
+    return EXISTS(table_name=table.name).WHERE(condition).GROUP_BY(group_by).HAVING(having)
 
 
 def exists_query(

@@ -24,12 +24,7 @@ class TestWithBasic:
         name, age, city = cols("name", "age", "city")
         inner_query = SELECT(name, age, city).FROM("users").WHERE(age > 18)
 
-        with_query = (
-            WITH(inner_query.AS("adults"))
-            .SELECT(name)
-            .FROM("adults")
-            .WHERE(city == "New York")
-        )
+        with_query = WITH(inner_query.AS("adults")).SELECT(name).FROM("adults").WHERE(city == "New York")
         sql, params = with_query.placeholder_pair()
         assert "WITH" in sql
         assert "adults AS" in sql
@@ -82,20 +77,9 @@ class TestWithAdvanced:
     def test_with_order_by_limit_offset(self):
         """Test WITH clause with ORDER BY, LIMIT, and OFFSET"""
         name, created_at = cols("name", "created_at")
-        inner_query = (
-            SELECT(name, created_at)
-            .FROM("users")
-            .ORDER_BY(created_at, "DESC")
-            .LIMIT(100)
-        )
+        inner_query = SELECT(name, created_at).FROM("users").ORDER_BY(created_at, "DESC").LIMIT(100)
 
-        with_query = (
-            WITH(inner_query.AS("recent_users"))
-            .SELECT(name)
-            .FROM("recent_users")
-            .LIMIT(10)
-            .OFFSET(5)
-        )
+        with_query = WITH(inner_query.AS("recent_users")).SELECT(name).FROM("recent_users").LIMIT(10).OFFSET(5)
 
         sql, params = with_query.placeholder_pair()
         assert "WITH" in sql
@@ -105,15 +89,10 @@ class TestWithAdvanced:
     def test_with_and_group_by(self):
         """Test WITH clause with GROUP BY"""
         salary = col("salary")
-        inner_query = (
-            SELECT("department", "salary").FROM("employees").WHERE(salary > 50000)
-        )
+        inner_query = SELECT("department", "salary").FROM("employees").WHERE(salary > 50000)
 
         with_query = (
-            WITH(inner_query.AS("high_earners"))
-            .SELECT("department")
-            .FROM("high_earners")
-            .GROUP_BY("department")
+            WITH(inner_query.AS("high_earners")).SELECT("department").FROM("high_earners").GROUP_BY("department")
         )
 
         sql, params = with_query.placeholder_pair()
@@ -131,12 +110,7 @@ class TestWithAdvanced:
             .WHERE((age > 18) & (status == "active") & (verified == True))  # noqa: E712
         )
 
-        with_query = (
-            WITH(inner_query.AS("active_users"))
-            .SELECT("name", "age")
-            .FROM("active_users")
-            .WHERE(age < 65)
-        )
+        with_query = WITH(inner_query.AS("active_users")).SELECT("name", "age").FROM("active_users").WHERE(age < 65)
 
         sql, params = with_query.placeholder_pair()
         assert "WITH" in sql
@@ -169,11 +143,7 @@ class TestWithAdvanced:
     def test_with_numeric_operations(self):
         """Test WITH clause with numeric operations"""
         price, discount, quantity = cols("price", "discount", "quantity")
-        inner_query = (
-            SELECT(price, discount, quantity)
-            .FROM("products")
-            .WHERE((price - discount) > 50)
-        )
+        inner_query = SELECT(price, discount, quantity).FROM("products").WHERE((price - discount) > 50)
 
         with_query = (
             WITH(inner_query.AS("discounted_products"))
@@ -191,16 +161,9 @@ class TestWithAdvanced:
     def test_with_string_comparison(self):
         """Test WITH clause with string comparison"""
         name, category, status = cols("name", "category", "status")
-        inner_query = (
-            SELECT(name, category).FROM("products").WHERE(category == "Electronics")
-        )
+        inner_query = SELECT(name, category).FROM("products").WHERE(category == "Electronics")
 
-        with_query = (
-            WITH(inner_query.AS("electronics"))
-            .SELECT(name)
-            .FROM("electronics")
-            .WHERE(status == "available")
-        )
+        with_query = WITH(inner_query.AS("electronics")).SELECT(name).FROM("electronics").WHERE(status == "available")
 
         sql, params = with_query.placeholder_pair()
         assert "WITH" in sql

@@ -29,9 +29,7 @@ def is_collection(thing: Iterable) -> bool:
     Returns:
         bool: True if the object is a collection, False otherwise.
     """
-    return isinstance(thing, Iterable) and not isinstance(
-        thing, (bytes, str, GeneratorType)
-    )
+    return isinstance(thing, Iterable) and not isinstance(thing, (bytes, str, GeneratorType))
 
 
 def is_unknown(value) -> bool:
@@ -133,9 +131,7 @@ def str_is_between(value: str, start: str, end: str) -> bool:
     return value.startswith(start) and value.endswith(end)
 
 
-def ensure_bracketed(
-    value: str, left_bracket: str = "(", right_bracket: str = ")"
-) -> str:
+def ensure_bracketed(value: str, left_bracket: str = "(", right_bracket: str = ")") -> str:
     """
     Ensure a string is enclosed with the specified brackets.
     Args:

@@ -1,7 +1,9 @@
 try:
     from tablesqlite import SQLTableInfo
 except ImportError:
-    raise ImportError("tablesqlite is required for this integration. Please install it with: pip install recordsql[tablesqlite]")
+    raise ImportError(
+        "tablesqlite is required for this integration. Please install it with: pip install recordsql[tablesqlite]"
+    )
 from ...query import DeleteQuery, DELETE
 from ...dependencies import SQLCondition, no_condition
 from ...types import SQLCol

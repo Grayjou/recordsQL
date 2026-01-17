@@ -63,7 +63,10 @@ class ExistsQuery(RecordQuery):
         )
 
     def __repr__(self):
-        return f"ExistsQuery(table={self.table_name}, where={self.condition}, group_by={self.group_by}, having={self.having})"
+        return (
+            f"ExistsQuery(table={self.table_name}, where={self.condition}, "
+            f"group_by={self.group_by}, having={self.having})"
+        )
 
 
 def EXISTS(table_name: str = None) -> ExistsQuery:

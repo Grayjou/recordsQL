@@ -16,19 +16,9 @@ class DeleteQuery(RecordQuery):
         returning: Optional[List[SQLCol]] = None,
         ignore_forbidden_characters: bool = False,
     ):
-        super().__init__(
-            table_name=table_name, validate_table_name=not ignore_forbidden_characters
-        )
-        self.condition = (
-            condition if isinstance(condition, SQLCondition) else no_condition
-        )
-        self.returning = (
-            returning
-            if isinstance(returning, list)
-            else [returning]
-            if returning
-            else None
-        )
+        super().__init__(table_name=table_name, validate_table_name=not ignore_forbidden_characters)
+        self.condition = condition if isinstance(condition, SQLCondition) else no_condition
+        self.returning = returning if isinstance(returning, list) else [returning] if returning else None
         self.ignore_forbidden_characters = ignore_forbidden_characters
 
     def WHERE(self, condition: SQLCondition) -> "DeleteQuery":
@@ -70,9 +60,5 @@ class DeleteQuery(RecordQuery):
         return f"DeleteQuery(table={self.table_name}, where={self.condition}, returning={self.returning})"
 
 
-def DELETE(
-    table_name: str = None, ignore_forbidden_characters: bool = False
-) -> DeleteQuery:
-    return DeleteQuery(
-        table_name=table_name, ignore_forbidden_characters=ignore_forbidden_characters
-    )
+def DELETE(table_name: str = None, ignore_forbidden_characters: bool = False) -> DeleteQuery:
+    return DeleteQuery(table_name=table_name, ignore_forbidden_characters=ignore_forbidden_characters)

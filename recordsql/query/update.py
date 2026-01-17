@@ -18,16 +18,10 @@ class UpdateQuery(RecordQuery):
         returning: List[SQLCol] = None,
         ignore_forbidden_characters: bool = False,
     ) -> None:
-        self._set_clauses = (
-            self.normalize_set_clauses(set_clauses) if set_clauses else None
-        )
-        super().__init__(
-            table_name=table_name, validate_table_name=not ignore_forbidden_characters
-        )
+        self._set_clauses = self.normalize_set_clauses(set_clauses) if set_clauses else None
+        super().__init__(table_name=table_name, validate_table_name=not ignore_forbidden_characters)
         self.ignore_forbidden_characters = ignore_forbidden_characters
-        self.condition = (
-            condition if isinstance(condition, SQLCondition) else no_condition
-        )
+        self.condition = condition if isinstance(condition, SQLCondition) else no_condition
         if not ignore_forbidden_characters:
             validate_column_names(returning, allow_dot=True)
         if isinstance(returning, SQLCol):
@@ -87,9 +81,7 @@ class UpdateQuery(RecordQuery):
                             validate_name(col_key, allow_dot=True)
                         set_clauses[col_key] = v
                     else:
-                        raise ValueError(
-                            "SET clause must be a dict or a (col_name, value) pair."
-                        )
+                        raise ValueError("SET clause must be a dict or a (col_name, value) pair.")
         else:
             raise ValueError("SET clause must be a dict or a list of pairs.")
 

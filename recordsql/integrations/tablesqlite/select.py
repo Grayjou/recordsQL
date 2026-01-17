@@ -1,7 +1,9 @@
 try:
     from tablesqlite import SQLTableInfo
 except ImportError:
-    raise ImportError("tablesqlite is required for this integration. Please install it with: pip install recordsql[tablesqlite]")
+    raise ImportError(
+        "tablesqlite is required for this integration. Please install it with: pip install recordsql[tablesqlite]"
+    )
 from ...query import (
     SelectQuery,
     SELECT,
@@ -28,14 +30,7 @@ def select_query_for(
     withs: Optional[List[WithQuery]] = None,
 ) -> SelectQuery:
     # Cant apply if_column_exists here, because columns can be any expression
-    sq = (
-        SELECT(*columns)
-        .FROM(table.name)
-        .WHERE(condition)
-        .LIMIT(limit)
-        .OFFSET(offset)
-        .HAVING(having)
-    )
+    sq = SELECT(*columns).FROM(table.name).WHERE(condition).LIMIT(limit).OFFSET(offset).HAVING(having)
     sq.order_by = order_by
     sq.criteria = criteria
     sq.group_by = group_by

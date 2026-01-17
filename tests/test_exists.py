@@ -42,11 +42,7 @@ class TestExistsAdvanced:
     def test_exists_with_complex_conditions(self):
         """Test EXISTS with complex WHERE conditions"""
         age, salary, department = cols("age", "salary", "department")
-        query = (
-            EXISTS()
-            .FROM("employees")
-            .WHERE(((age > 30) & (salary > 50000)) | (department == "Executive"))
-        )
+        query = EXISTS().FROM("employees").WHERE(((age > 30) & (salary > 50000)) | (department == "Executive"))
         sql, params = query.placeholder_pair()
         assert "EXISTS" in sql
         assert "WHERE" in sql
@@ -56,9 +52,7 @@ class TestExistsAdvanced:
 
     def test_exists_with_datetime_expression(self):
         """Test EXISTS with DATETIME expression"""
-        signup_date, total_purchases, infractions = cols(
-            "signup_date", "total_purchases", "infractions"
-        )
+        signup_date, total_purchases, infractions = cols("signup_date", "total_purchases", "infractions")
         query = (
             EXISTS()
             .FROM("customers")
@@ -89,9 +83,7 @@ class TestExistsAdvanced:
     def test_exists_with_and_conditions(self):
         """Test EXISTS with AND conditions"""
         age, department = cols("age", "department")
-        query = (
-            EXISTS().FROM("employees").WHERE((age > 40) & (department == "Management"))
-        )
+        query = EXISTS().FROM("employees").WHERE((age > 40) & (department == "Management"))
         sql, params = query.placeholder_pair()
         assert "EXISTS" in sql
         assert "WHERE" in sql
@@ -133,6 +125,7 @@ class TestExistsAdvanced:
         assert "EXISTS" in sql
         assert "WHERE" in sql
         assert "IS NULL" in sql
+
     def test_exists_with_greater_than_or_equal(self):
         """Test EXISTS with greater than or equal condition"""
         score = col("score")

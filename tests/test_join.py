@@ -10,11 +10,7 @@ class TestJoinBasic:
     def test_inner_join(self):
         """Test INNER JOIN"""
         user_id, order_id = cols("user_id", "order_id")
-        query = (
-            SELECT()
-            .FROM("users")
-            .INNER_JOIN(table_name="orders", on=(user_id == col("order_user_id")))
-        )
+        query = SELECT().FROM("users").INNER_JOIN(table_name="orders", on=(user_id == col("order_user_id")))
         sql, params = query.placeholder_pair()
         assert "INNER JOIN" in sql
         assert '"orders"' in sql
@@ -23,11 +19,7 @@ class TestJoinBasic:
     def test_left_join(self):
         """Test LEFT JOIN"""
         user_id = col("user_id")
-        query = (
-            SELECT()
-            .FROM("users")
-            .LEFT_JOIN(table_name="orders", on=(user_id == col("order_user_id")))
-        )
+        query = SELECT().FROM("users").LEFT_JOIN(table_name="orders", on=(user_id == col("order_user_id")))
         sql, params = query.placeholder_pair()
         assert "LEFT JOIN" in sql
         assert '"orders"' in sql
@@ -36,11 +28,7 @@ class TestJoinBasic:
     def test_right_join(self):
         """Test RIGHT JOIN"""
         user_id = col("user_id")
-        query = (
-            SELECT()
-            .FROM("users")
-            .RIGHT_JOIN(table_name="orders", on=(user_id == col("order_user_id")))
-        )
+        query = SELECT().FROM("users").RIGHT_JOIN(table_name="orders", on=(user_id == col("order_user_id")))
         sql, params = query.placeholder_pair()
         assert "RIGHT JOIN" in sql
         assert '"orders"' in sql
@@ -49,11 +37,7 @@ class TestJoinBasic:
     def test_full_join(self):
         """Test FULL JOIN"""
         user_id = col("user_id")
-        query = (
-            SELECT()
-            .FROM("users")
-            .FULL_JOIN(table_name="orders", on=(user_id == col("order_user_id")))
-        )
+        query = SELECT().FROM("users").FULL_JOIN(table_name="orders", on=(user_id == col("order_user_id")))
         sql, params = query.placeholder_pair()
         assert "FULL JOIN" in sql or "FULL OUTER JOIN" in sql
         assert '"orders"' in sql
@@ -83,10 +67,7 @@ class TestJoinAdvanced:
         """Test JOIN with WHERE clause"""
         user_id, age = cols("user_id", "age")
         query = (
-            SELECT()
-            .FROM("users")
-            .INNER_JOIN(table_name="orders", on=(user_id == col("order_user_id")))
-            .WHERE(age > 18)
+            SELECT().FROM("users").INNER_JOIN(table_name="orders", on=(user_id == col("order_user_id"))).WHERE(age > 18)
         )
         sql, params = query.placeholder_pair()
         assert "INNER JOIN" in sql
@@ -109,12 +90,7 @@ class TestJoinAdvanced:
     def test_join_with_limit(self):
         """Test JOIN with LIMIT"""
         user_id = col("user_id")
-        query = (
-            SELECT()
-            .FROM("users")
-            .INNER_JOIN(table_name="orders", on=(user_id == col("order_user_id")))
-            .LIMIT(10)
-        )
+        query = SELECT().FROM("users").INNER_JOIN(table_name="orders", on=(user_id == col("order_user_id"))).LIMIT(10)
         sql, params = query.placeholder_pair()
         assert "INNER JOIN" in sql
         assert "LIMIT 10" in sql
@@ -122,11 +98,7 @@ class TestJoinAdvanced:
     def test_join_with_numeric_condition(self):
         """Test JOIN with numeric condition in ON clause"""
         store_id = num(1275682)
-        query = (
-            SELECT()
-            .FROM("products")
-            .INNER_JOIN(table_name="prices", on=(store_id == col("store_id")))
-        )
+        query = SELECT().FROM("products").INNER_JOIN(table_name="prices", on=(store_id == col("store_id")))
         sql, params = query.placeholder_pair()
         assert "INNER JOIN" in sql
         assert '"prices"' in sql
@@ -134,23 +106,17 @@ class TestJoinAdvanced:
 
     def test_with_query_and_joins(self):
         """Test WITH query with JOINs"""
-        name, age, email, total_purchases = cols(
-            "name", "age", "email", "total_purchases"
-        )
+        name, age, email, total_purchases = cols("name", "age", "email", "total_purchases")
         current_store_id = num(1275682)
 
         select_query = SELECT(name, age, email).FROM("users").WHERE(age > 18)
 
-        with_query = (
-            WITH(select_query.AS("adult_users"))
-            .SELECT(name, age, email)
-            .FROM("adult_users")
-        )
+        with_query = WITH(select_query.AS("adult_users")).SELECT(name, age, email).FROM("adult_users")
 
         # Add JOINs
-        with_query.INNER_JOIN(
-            table_name="prices", on=(current_store_id == col("store_id"))
-        ).LEFT_JOIN(table_name="orders", on=(current_store_id == col("store_id")))
+        with_query.INNER_JOIN(table_name="prices", on=(current_store_id == col("store_id"))).LEFT_JOIN(
+            table_name="orders", on=(current_store_id == col("store_id"))
+        )
 
         sql, params = with_query.placeholder_pair()
         assert "WITH adult_users AS" in sql
@@ -182,9 +148,7 @@ class TestJoinAdvanced:
             SELECT()
             .FROM("users")
             .INNER_JOIN(table_name="orders", on=(user_id == col("order_user_id")))
-            .INNER_JOIN(
-                table_name="products", on=(product_id == col("order_product_id"))
-            )
+            .INNER_JOIN(table_name="products", on=(product_id == col("order_product_id")))
         )
         sql, params = query.placeholder_pair()
         assert sql.count("INNER JOIN") == 2
@@ -199,9 +163,7 @@ class TestJoinAdvanced:
             .FROM("users")
             .INNER_JOIN(table_name="orders", on=(user_id == col("order_user_id")))
             .LEFT_JOIN(table_name="payments", on=(order_id == col("payment_order_id")))
-            .RIGHT_JOIN(
-                table_name="products", on=(product_id == col("order_product_id"))
-            )
+            .RIGHT_JOIN(table_name="products", on=(product_id == col("order_product_id")))
         )
         sql, params = query.placeholder_pair()
         assert "INNER JOIN" in sql

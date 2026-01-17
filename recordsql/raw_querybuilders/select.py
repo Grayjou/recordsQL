@@ -30,9 +30,7 @@ def build_select_query(
     joins: Optional[List["JoinQuery"]] = None,  # type hint correction
     ignore_forbidden_chars: bool = False,
 ) -> Tuple[str, List[Any]]:
-    columns_str, column_placeholders = collect_column_placeholders(
-        columns, ignore_forbidden_chars
-    )
+    columns_str, column_placeholders = collect_column_placeholders(columns, ignore_forbidden_chars)
 
     where_clause, where_params = _format_conditions(condition)
     group_by_clause = _format_group_by(group_by, ignore_forbidden_chars)
@@ -66,9 +64,7 @@ class JoinQuery:
         if join_type not in {"INNER", "LEFT", "RIGHT", "FULL", "CROSS"}:
             raise ValueError(f"Unsupported join type: {join_type}")
 
-        validate_name(
-            table_name, validate_chars=not ignore_forbidden_chars, allow_digit=True
-        )
+        validate_name(table_name, validate_chars=not ignore_forbidden_chars, allow_digit=True)
         if alias:
             validate_name(alias, validate_chars=not ignore_forbidden_chars)
 
@@ -80,9 +76,7 @@ class JoinQuery:
 
     def placeholder_pair(self) -> Tuple[str, List[Any]]:
         condition_str, params = self.on.placeholder_pair()
-        table_expr = _format_table_name(
-            self.table_name, validate=not self.ignore_forbidden_chars
-        )
+        table_expr = _format_table_name(self.table_name, validate=not self.ignore_forbidden_chars)
         if self.alias:
             table_expr = f"{table_expr} AS {self.alias}"
 

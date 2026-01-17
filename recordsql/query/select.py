@@ -363,7 +363,10 @@ class SelectQuery(RecordQuery):
         condition = self.condition.sql_string() if self.condition else None
         condition = f"condition={condition}"
         ignore_forbidden_chars = f"ifb={self.ignore_forbidden_chars}"
-        all = f"{start}{mid}, {table_name}, {condition}, {order_by}, {criteria}, {limit}, {offset}, {group_by}, {having}, {ignore_forbidden_chars}"
+        all = (
+            f"{start}{mid}, {table_name}, {condition}, {order_by}, {criteria}, "
+            f"{limit}, {offset}, {group_by}, {having}, {ignore_forbidden_chars}"
+        )
         return f"{all}{end}"
 
     def copy_with(
@@ -388,10 +391,14 @@ class SelectQuery(RecordQuery):
             table_name (str, optional): The name of the table to query. Defaults to None.
             condition (SQLCondition, optional): The condition to apply to the query. Defaults to None.
             order_by (Optional[List[SQLOrderBy]], optional): The column(s) to order the results by. Defaults to None.
-            criteria (List[str], optional): The sorting criteria, either "ASC" or "DESC". Defaults to None.
-            limit (Optional[Union[int, str]], optional): The maximum number of rows to return. Defaults to None.
-            offset (Optional[Union[int, str]], optional): The number of rows to skip before starting to return rows. Defaults to None.
-            group_by (Union[SQLCol, List[SQLCol], None], optional): The column(s) to group the results by. Defaults to None.
+            criteria (List[str], optional): Sorting criteria ("ASC" or "DESC"). Defaults to
+                None.
+            limit (Optional[Union[int, str]], optional): Max rows to return. Defaults to
+                None.
+            offset (Optional[Union[int, str]], optional): Number of rows to skip before starting to
+                return rows. Defaults to None.
+            group_by (Union[SQLCol, List[SQLCol], None], optional): Columns to group results by.
+                Defaults to None.
             having (SQLCondition, optional): The condition to apply to the grouped results. Defaults to None.
         Returns:
             SelectQuery: A new instance of SelectQuery with the specified modifications.
@@ -422,9 +429,7 @@ class SelectQuery(RecordQuery):
         return self.copy_with()
 
     @classmethod
-    def _SELECT(
-        cls, column_list: Union[SQLCol, List[SQLCol]] = "*", *args: SQLCol, **kwargs
-    ) -> SelectQuery:
+    def _SELECT(cls, column_list: Union[SQLCol, List[SQLCol]] = "*", *args: SQLCol, **kwargs) -> SelectQuery:
         """
         Constructs a SELECT SQL query.
         Args:
@@ -457,14 +462,10 @@ class SelectQuery(RecordQuery):
         if join_list is not None:
             if isinstance(join_list, JoinQuery):
                 join_list = [join_list]
-            elif isinstance(join_list, Iterable) and not isinstance(
-                join_list, (str, bytes)
-            ):
+            elif isinstance(join_list, Iterable) and not isinstance(join_list, (str, bytes)):
                 join_list = list(join_list)
             else:
-                raise TypeError(
-                    "join_list must be a JoinQuery or an iterable of JoinQuery"
-                )
+                raise TypeError("join_list must be a JoinQuery or an iterable of JoinQuery")
         else:
             join_list = []
 
@@ -478,9 +479,7 @@ class SelectQuery(RecordQuery):
         self.joins = my_joins
         return self
 
-    def INNER_JOIN(
-        self, table_name: str, on: SQLCondition, alias: Optional[str] = None
-    ) -> SelectQuery:
+    def INNER_JOIN(self, table_name: str, on: SQLCondition, alias: Optional[str] = None) -> SelectQuery:
         """
         Adds an INNER JOIN clause to the query.
         Args:
@@ -494,9 +493,7 @@ class SelectQuery(RecordQuery):
         self._add_join(join)
         return self
 
-    def LEFT_JOIN(
-        self, table_name: str, on: SQLCondition, alias: Optional[str] = None
-    ) -> SelectQuery:
+    def LEFT_JOIN(self, table_name: str, on: SQLCondition, alias: Optional[str] = None) -> SelectQuery:
         """
         Adds a LEFT JOIN clause to the query.
         Args:
@@ -510,9 +507,7 @@ class SelectQuery(RecordQuery):
         self._add_join(join)
         return self
 
-    def RIGHT_JOIN(
-        self, table_name: str, on: SQLCondition, alias: Optional[str] = None
-    ) -> SelectQuery:
+    def RIGHT_JOIN(self, table_name: str, on: SQLCondition, alias: Optional[str] = None) -> SelectQuery:
         """
         Adds a RIGHT JOIN clause to the query.
         Args:
@@ -526,9 +521,7 @@ class SelectQuery(RecordQuery):
         self._add_join(join)
         return self
 
-    def FULL_JOIN(
-        self, table_name: str, on: SQLCondition, alias: Optional[str] = None
-    ) -> SelectQuery:
+    def FULL_JOIN(self, table_name: str, on: SQLCondition, alias: Optional[str] = None) -> SelectQuery:
         """
         Adds a FULL JOIN clause to the query.
         Args:
@@ -542,9 +535,7 @@ class SelectQuery(RecordQuery):
         self._add_join(join)
         return self
 
-    def CROSS_JOIN(
-        self, table_name: str, on: SQLCondition, alias: Optional[str] = None
-    ) -> SelectQuery:
+    def CROSS_JOIN(self, table_name: str, on: SQLCondition, alias: Optional[str] = None) -> SelectQuery:
         """
         Adds a CROSS JOIN clause to the query.
         Args:
@@ -558,9 +549,7 @@ class SelectQuery(RecordQuery):
         self._add_join(join)
         return self
 
-    def OUTER_JOIN(
-        self, table_name: str, on: SQLCondition, alias: Optional[str] = None
-    ) -> SelectQuery:
+    def OUTER_JOIN(self, table_name: str, on: SQLCondition, alias: Optional[str] = None) -> SelectQuery:
         """
         Adds an OUTER JOIN clause to the query.
         Args:
@@ -601,9 +590,7 @@ class SelectQuery(RecordQuery):
         Returns:
             WithQuery: A new instance of WithQuery with the current SelectQuery as its query.
         """
-        return WithQuery(
-            self, alias=alias, ignore_forbidden_chars=self.ignore_forbidden_chars
-        )
+        return WithQuery(self, alias=alias, ignore_forbidden_chars=self.ignore_forbidden_chars)
 
     def __eq__(self, other):
         return False
@@ -643,9 +630,7 @@ class SelectQuery(RecordQuery):
         if not all(isinstance(with_, WithQuery) for with_ in withs):
             raise TypeError("All withs must be instances of WithQuery")
 
-    def with_queries_as(
-        self, *with_queries: WithQuery, _new_withs=True, **as_with_dict
-    ) -> SelectQuery:
+    def with_queries_as(self, *with_queries: WithQuery, _new_withs=True, **as_with_dict) -> SelectQuery:
         """
         Adds one or more WITH queries to the current SelectQuery instance.
         This method allows you to define Common Table Expressions (CTEs) using
@@ -690,9 +675,7 @@ def SELECT(
     ignore_forbidden_characters: bool = False,
     **kwargs: Any,
 ) -> SelectQuery:
-    return SelectQuery._SELECT(
-        column_list, *args, ignore_forbidden_chars=ignore_forbidden_characters, **kwargs
-    )
+    return SelectQuery._SELECT(column_list, *args, ignore_forbidden_chars=ignore_forbidden_characters, **kwargs)
 
 
 SELECT.__doc__ = SelectQuery.SELECT.__doc__
@@ -773,9 +756,7 @@ class WithQuery:
 
 
 @normalize_args()
-def WITH(
-    *with_queries: WithQuery, base: Optional[SelectQuery] = None, **as_with_dict
-) -> SelectQuery:
+def WITH(*with_queries: WithQuery, base: Optional[SelectQuery] = None, **as_with_dict) -> SelectQuery:
     """
     Constructs a WITH SQL query.
     Args:

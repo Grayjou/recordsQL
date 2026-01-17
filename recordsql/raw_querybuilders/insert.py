@@ -54,10 +54,7 @@ def build_insert_query(
     # --- Extract columns ---
     col_names = list(values[0].keys())
     _validate_col_names(col_names)  # Reuse your validation
-    col_list = [
-        _normalize_column(col, ignore_forbidden_chars=ignore_forbidden_chars)
-        for col in col_names
-    ]
+    col_list = [_normalize_column(col, ignore_forbidden_chars=ignore_forbidden_chars) for col in col_names]
     column_str = ", ".join(col_list)
 
     # --- Prepare placeholders and parameters ---
@@ -90,7 +87,9 @@ def build_insert_query(
     returning_clause = _format_returning(returning, ignore_forbidden_chars)
 
     # --- Final query ---
-    query = f"INSERT{or_clause} INTO {table_name} ({column_str}) VALUES {values_clause} {conflict_clause}{returning_clause}"
+    query = (
+        f"INSERT{or_clause} INTO {table_name} ({column_str}) VALUES {values_clause} {conflict_clause}{returning_clause}"
+    )
 
     return query, all_params
 
@@ -145,9 +144,7 @@ class OnConflictQuery:
 
     def DO(self, do_what: str) -> "OnConflictQuery":
         if do_what.upper() not in self.valid_do_what:
-            raise ValueError(
-                f"Invalid action: {do_what}. Valid actions are: {self.valid_do_what}"
-            )
+            raise ValueError(f"Invalid action: {do_what}. Valid actions are: {self.valid_do_what}")
         self.do_what = do_what.upper()
         return self
 
@@ -184,7 +181,10 @@ class OnConflictQuery:
             set_clause, injections = format_set_clause(self.set_clauses)
             condition_clause, condition_injections = format_conditions(condition)
             injections.extend(condition_injections)
-            on_conflict_clause = f'ON CONFLICT ({", ".join([col.expression_value for col in self.conflict_cols])}) DO UPDATE {set_clause}{condition_clause}'
+            on_conflict_clause = (
+                f'ON CONFLICT ({", ".join([col.expression_value for col in self.conflict_cols])}) '
+                f'DO UPDATE {set_clause}{condition_clause}'
+            )
             return on_conflict_clause, injections
         else:
             raise ValueError(f"Unknown conflict action: {self.do_what}")

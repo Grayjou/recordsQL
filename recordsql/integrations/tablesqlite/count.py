@@ -1,8 +1,11 @@
 from typing import Union, List, Optional
+
 try:
     from tablesqlite import SQLTableInfo
 except ImportError:
-    raise ImportError("tablesqlite is required for this integration. Please install it with: pip install recordsql[tablesqlite]")
+    raise ImportError(
+        "tablesqlite is required for this integration. Please install it with: pip install recordsql[tablesqlite]"
+    )
 from ...dependencies import SQLCondition, no_condition
 from ...query import COUNT, CountQuery
 from ...types import SQLCol
@@ -17,9 +20,7 @@ def count_query_for(
     """
     Create a reference for a COUNT query.
     """
-    return (
-        COUNT(table_name=table.name).WHERE(condition).GROUP_BY(group_by).HAVING(having)
-    )
+    return COUNT(table_name=table.name).WHERE(condition).GROUP_BY(group_by).HAVING(having)
 
 
 def count_query(

@@ -53,9 +53,7 @@ def normalize_args(
     return decorator
 
 
-def _normalize_args(
-    *args, decompose_string=False, decompose_bytes=False, convert=True, ignore_dict=True
-):
+def _normalize_args(*args, decompose_string=False, decompose_bytes=False, convert=True, ignore_dict=True):
     if not args:
         return []
     elif len(args) > 1:
@@ -86,11 +84,7 @@ def enlist(items, decompose_string=False, decompose_bytes=True, *, unpack=True) 
         (
             isinstance(items, str) and decompose_string,
             isinstance(items, bytes) and decompose_bytes,
-            (
-                unpack
-                and isinstance(items, Iterable)
-                and not isinstance(items, (str, bytes))
-            ),
+            (unpack and isinstance(items, Iterable) and not isinstance(items, (str, bytes))),
         )
     ):
         return list(items)
@@ -111,19 +105,13 @@ def validate_monolist(*items, monotype: Union[Iterable[Type], Type] = None) -> N
 
     first_item = items[0]
     try:
-        type_to_verify = next(
-            _type for _type in monotype if isinstance(first_item, _type)
-        )
+        type_to_verify = next(_type for _type in monotype if isinstance(first_item, _type))
     except StopIteration:
-        raise TypeError(
-            f"First item {first_item} is not an instance of any allowed monotypes: {monotype}"
-        )
+        raise TypeError(f"First item {first_item} is not an instance of any allowed monotypes: {monotype}")
 
     for i, item in enumerate(items[1:], start=1):
         if not isinstance(item, type_to_verify):
-            raise TypeError(
-                f"Item {i} is of type {type(item).__name__}, expected {type_to_verify.__name__}."
-            )
+            raise TypeError(f"Item {i} is of type {type(item).__name__}, expected {type_to_verify.__name__}.")
 
 
 def is_pair(item: Any) -> bool:

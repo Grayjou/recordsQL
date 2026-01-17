@@ -1,7 +1,9 @@
 try:
     from tablesqlite import SQLTableInfo
 except ImportError:
-    raise ImportError("tablesqlite is required for this integration. Please install it with: pip install recordsql[tablesqlite]")
+    raise ImportError(
+        "tablesqlite is required for this integration. Please install it with: pip install recordsql[tablesqlite]"
+    )
 from ...query import (
     InsertQuery,
     INSERT,
@@ -22,28 +24,20 @@ def insert_query_for(
     **kwargs,
 ) -> InsertQuery:
     set_columns = kwargs
-    set_columns_in_self = {
-        key: value for key, value in set_columns.items() if key in table.column_dict
-    }
+    set_columns_in_self = {key: value for key, value in set_columns.items() if key in table.column_dict}
     for item in items:
         if isinstance(item, dict):
-            set_columns_in_self.update(
-                {key: value for key, value in item.items() if key in table.column_dict}
-            )
+            set_columns_in_self.update({key: value for key, value in item.items() if key in table.column_dict})
             set_columns.update(item)
         elif isinstance(item, tuple) and len(item) == 2 and isinstance(item[0], str):
             set_columns[item[0]] = item[1]
             if item[0] in table.column_dict:
                 set_columns_in_self[item[0]] = item[1]
         else:
-            raise ValueError(
-                f"Invalid item format: {item}. Expected dict or (str, any) tuple."
-            )
+            raise ValueError(f"Invalid item format: {item}. Expected dict or (str, any) tuple.")
     if if_column_exists and set_columns != set_columns_in_self:
         if resolve_by.lower() == "raise":
-            raise ValueError(
-                "If 'if_column_exists' is True, all provided columns must exist in the table."
-            )
+            raise ValueError("If 'if_column_exists' is True, all provided columns must exist in the table.")
         elif resolve_by.lower() == "ignore":
             set_columns = set_columns_in_self
     if not set_columns:

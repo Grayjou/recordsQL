@@ -16,9 +16,7 @@ class CountQuery(RecordQuery):
         having: Optional[SQLCondition] = None,
         ignore_forbidden_characters: bool = False,
     ):
-        super().__init__(
-            table_name=table_name, validate_table_name=not ignore_forbidden_characters
-        )
+        super().__init__(table_name=table_name, validate_table_name=not ignore_forbidden_characters)
         self.condition = condition
         self.group_by = group_by
         self.having = having
@@ -62,12 +60,11 @@ class CountQuery(RecordQuery):
         raise NotImplementedError("OFFSET clause is not supported in COUNT queries.")
 
     def __repr__(self):
-        return f"CountQuery(table={self.table_name}, where={self.condition}, group_by={self.group_by}, having={self.having})"
+        return (
+            f"CountQuery(table={self.table_name}, where={self.condition}, "
+            f"group_by={self.group_by}, having={self.having})"
+        )
 
 
-def COUNT(
-    table_name: str = None, ignore_forbidden_characters: bool = False
-) -> CountQuery:
-    return CountQuery(
-        table_name=table_name, ignore_forbidden_characters=ignore_forbidden_characters
-    )
+def COUNT(table_name: str = None, ignore_forbidden_characters: bool = False) -> CountQuery:
+    return CountQuery(table_name=table_name, ignore_forbidden_characters=ignore_forbidden_characters)

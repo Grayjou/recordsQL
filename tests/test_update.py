@@ -44,9 +44,7 @@ class TestUpdateBasic:
         """Test UPDATE with multiple WHERE conditions"""
         age = col("age")
         active = col("active")
-        query = (
-            UPDATE("users").SET(status="senior").WHERE((age > 50) & (active == True))  # noqa: E712
-        )
+        query = UPDATE("users").SET(status="senior").WHERE((age > 50) & (active == True))  # noqa: E712
         sql, params = query.placeholder_pair()
         assert 'UPDATE "users"' in sql
         assert "WHERE" in sql
@@ -78,11 +76,7 @@ class TestUpdateAdvanced:
     def test_update_with_complex_where(self):
         """Test UPDATE with complex WHERE conditions"""
         age, salary, department = cols("age", "salary", "department")
-        query = (
-            UPDATE("employees")
-            .SET(bonus=5000)
-            .WHERE(((age > 30) & (salary < 80000)) | (department == "Sales"))
-        )
+        query = UPDATE("employees").SET(bonus=5000).WHERE(((age > 30) & (salary < 80000)) | (department == "Sales"))
         sql, params = query.placeholder_pair()
         assert 'UPDATE "employees"' in sql
         assert "WHERE" in sql
@@ -94,7 +88,7 @@ class TestUpdateAdvanced:
     def test_update_increment_value(self):
         """Test UPDATE with expression (increment) - skipped, set_expr API unclear"""
         """This was a misunderstanding, set_expr is for IN SET clause, not for expressions in WHERE."""
-        values = set_expr((1,2,3))
+        values = set_expr((1, 2, 3))
         query = UPDATE("counters").SET(count=col("count") + 1).WHERE(col("id").isin(values))
         sql, params = query.placeholder_pair()
         assert 'UPDATE "counters"' in sql
@@ -154,9 +148,7 @@ class TestUpdateAdvanced:
 
     def test_update_with_returning_all(self):
         """Test UPDATE with RETURNING *"""
-        query = (
-            UPDATE("users").SET(status="active").WHERE(col("id") == 20).RETURNING("*")
-        )
+        query = UPDATE("users").SET(status="active").WHERE(col("id") == 20).RETURNING("*")
         sql, params = query.placeholder_pair()
         assert 'UPDATE "users"' in sql
         assert "RETURNING" in sql

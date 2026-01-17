@@ -72,14 +72,10 @@ WINDOWS_RESERVED_NAMES = {
 }
 
 # Disallowed characters on Windows & common CLI contexts
-ILLEGAL_CHARS_PATTERN = re.compile(
-    r'[<>:"/\\|?*\x00-\x1F]'
-)  # \x00-\x1F = control chars
+ILLEGAL_CHARS_PATTERN = re.compile(r'[<>:"/\\|?*\x00-\x1F]')  # \x00-\x1F = control chars
 
 
-def validate_file_name(
-    file_name: str, *, return_false_on_error: bool = False, remove_suffix: bool = False
-) -> bool:
+def validate_file_name(file_name: str, *, return_false_on_error: bool = False, remove_suffix: bool = False) -> bool:
     """
     Validates a file name to ensure it is safe for filesystem and console usage.
 
@@ -113,9 +109,7 @@ def validate_file_name(
         if stripped_name in ("/", "\\"):
             raise ValueError("file_name cannot be just a slash")
         if ILLEGAL_CHARS_PATTERN.search(stripped_name):
-            raise ValueError(
-                'file_name contains illegal characters (e.g. < > : " / \\ | ? *)'
-            )
+            raise ValueError('file_name contains illegal characters (e.g. < > : " / \\ | ? *)')
         if stripped_name.upper() in WINDOWS_RESERVED_NAMES:
             raise ValueError(f"file_name '{file_name}' is reserved on Windows")
         if len(stripped_name) > 255:
@@ -130,18 +124,18 @@ def validate_file_name(
     return True
 
 
-def validate_database_path(
-    database_path: str, *, return_false_on_error: bool = False
-) -> bool:
+def validate_database_path(database_path: str, *, return_false_on_error: bool = False) -> bool:
     """
     Validates the given database path to ensure it meets the requirements for a valid SQLite database file.
 
     Args:
         database_path (str): The path to the SQLite database file.
-        return_false_on_error (bool, optional): If True, return False instead of raising exceptions on invalid input. Defaults to False.
+        return_false_on_error (bool, optional): If True, return False instead of raising exceptions
+            on invalid input. Defaults to False.
 
     Returns:
-        bool: True if the database path is valid; False if invalid and return_false_on_error is True.
+        bool: True if the database path is valid; False if invalid and return_false_on_error is
+            True.
 
     Raises:
         ValueError: If validation fails and return_false_on_error is False.
@@ -156,14 +150,10 @@ def validate_database_path(
         file_name = os_path_basename(database_path)
 
         if not file_name.endswith(".db"):
-            raise ValueError(
-                "database_path must be a valid SQLite database file (must end with .db)"
-            )
+            raise ValueError("database_path must be a valid SQLite database file (must end with .db)")
 
         # Validate the filename before the .db
-        if not validate_file_name(
-            file_name, return_false_on_error=False, remove_suffix=True
-        ):
+        if not validate_file_name(file_name, return_false_on_error=False, remove_suffix=True):
             raise ValueError("database_path contains an invalid file name before '.db'")
 
     except ValueError:
@@ -226,13 +216,9 @@ def validate_name(
 ) -> None:
     if isinstance(name, SQLExpression) and name.expression_type == "query":
         if getattr(name, "skip_validation", False):
-            raise AttributeError(
-                "Conflicting attribute: skip_validation at validate_name"
-            )
+            raise AttributeError("Conflicting attribute: skip_validation at validate_name")
         if getattr(name, "ignore_forbidden_chars", False):
-            raise AttributeError(
-                "Conflicting attribute: ignore_forbidden_chars at validate_name"
-            )
+            raise AttributeError("Conflicting attribute: ignore_forbidden_chars at validate_name")
         return
     if not isinstance(name, str):
         raise TypeError("Name must be a string.")
@@ -266,13 +252,9 @@ def validate_name(
             parts = name.split(".")
             for part in parts:
                 if not part:
-                    raise ValueError(
-                        "Column name has consecutive dots or leading/trailing dot."
-                    )
+                    raise ValueError("Column name has consecutive dots or leading/trailing dot.")
                 if part[0].isdigit():
-                    raise ValueError(
-                        f"Each part of a dotted name must not start with a digit: {part}"
-                    )
+                    raise ValueError(f"Each part of a dotted name must not start with a digit: {part}")
 
     if validate_words:
         found = next((word for word in keywords if word == name.casefold()), None)
@@ -312,18 +294,14 @@ def must_be_type(
 
     if not isinstance(obj, type_tuple):
         type_names = ", ".join(t.__name__ for t in type_tuple)
-        raise TypeError(
-            f"{name} must be of type {type_names}, but got {type(obj).__name__}."
-        )
+        raise TypeError(f"{name} must be of type {type_names}, but got {type(obj).__name__}.")
 
     if must_be_true and not bool(obj):
         raise ValueError(f"{name} must be truthy, but got {obj!r}.")
 
     for check in additional_checks:
         if not check(obj):
-            raise ValueError(
-                f"{name} failed additional check {check.__name__}: {obj!r}."
-            )
+            raise ValueError(f"{name} failed additional check {check.__name__}: {obj!r}.")
 
 
 def must_be_str(s: str, name: str = "argument", must_not_be_empty: bool = True) -> str:
@@ -370,11 +348,7 @@ def validate_column_names(
     max_len: int = 255,
     forgiven_chars=set(),
 ) -> None:
-    if (
-        names in ("*", All(), None)
-        or list(names) == ["*"]
-        or any(n in ("*", All()) for n in names)
-    ):
+    if names in ("*", All(), None) or list(names) == ["*"] or any(n in ("*", All()) for n in names):
         return
     if isinstance(names, str):
         names = [names]

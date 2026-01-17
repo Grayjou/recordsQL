@@ -31,9 +31,7 @@ class InsertQuery(RecordQuery):
         self.or_action = or_action
         self.on_conflict = on_conflict
         self.returning = returning
-        super().__init__(
-            table_name=table_name, validate_table_name=not ignore_forbidden_chars
-        )
+        super().__init__(table_name=table_name, validate_table_name=not ignore_forbidden_chars)
         self.ignore_forbidden_characters = ignore_forbidden_chars
 
     @property
@@ -66,24 +64,19 @@ class InsertQuery(RecordQuery):
         if self.columns is None or not self.columns:
             raise ValueError("Columns must be set before calling col_value_dict.")
         column_names = [
-            column.expression_value if isinstance(column, SQLExpression) else column
-            for column in self.columns
+            column.expression_value if isinstance(column, SQLExpression) else column for column in self.columns
         ]
         if self.bulk:
             pack = []
             expected_len = len(self)
             for value in self.values:
                 if len(value) != expected_len:
-                    raise ValueError(
-                        f"Expected {expected_len} values, got {len(value)}."
-                    )
+                    raise ValueError(f"Expected {expected_len} values, got {len(value)}.")
                 pack.append(dict(zip(column_names, value)))
             return pack
         else:
             if len(self.values) != len(self.columns):
-                raise ValueError(
-                    f"Expected {len(self.columns)} values, got {len(self.values)}."
-                )
+                raise ValueError(f"Expected {len(self.columns)} values, got {len(self.values)}.")
             return dict(zip(column_names, self.values))
 
     def INTO(self, table_name) -> InsertQuery:
@@ -164,9 +157,7 @@ class InsertQuery(RecordQuery):
         if not isinstance(conflict_cols, list):
             raise TypeError("Conflict columns must be a list of SQLCol objects.")
         validate_monolist(*conflict_cols, monotype=SQLCol)
-        self.on_conflict = OnConflictQuery(
-            do_what=do, conflict_cols=conflict_cols, set_clauses=set, condition=where
-        )
+        self.on_conflict = OnConflictQuery(do_what=do, conflict_cols=conflict_cols, set_clauses=set, condition=where)
         return self
 
 

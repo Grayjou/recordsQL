@@ -41,11 +41,7 @@ class TestDeleteAdvanced:
     def test_delete_with_complex_conditions(self):
         """Test DELETE with complex WHERE conditions"""
         age, salary, last_login = cols("age", "salary", "last_login")
-        query = (
-            DELETE()
-            .FROM("employees")
-            .WHERE(((age > 65) | (salary < 20000)) & (last_login < text("2020-01-01")))
-        )
+        query = DELETE().FROM("employees").WHERE(((age > 65) | (salary < 20000)) & (last_login < text("2020-01-01")))
         sql, params = query.placeholder_pair()
         assert 'DELETE FROM "employees"' in sql
         assert "WHERE" in sql
@@ -56,11 +52,7 @@ class TestDeleteAdvanced:
     def test_delete_with_and_conditions(self):
         """Test DELETE with AND conditions"""
         status, created_at = cols("status", "created_at")
-        query = (
-            DELETE()
-            .FROM("logs")
-            .WHERE((status == "processed") & (created_at < text("2023-01-01")))
-        )
+        query = DELETE().FROM("logs").WHERE((status == "processed") & (created_at < text("2023-01-01")))
         sql, params = query.placeholder_pair()
         assert 'DELETE FROM "logs"' in sql
         assert "WHERE" in sql
@@ -70,9 +62,7 @@ class TestDeleteAdvanced:
     def test_delete_with_or_conditions(self):
         """Test DELETE with OR conditions"""
         status, expired = cols("status", "expired")
-        query = (
-            DELETE().FROM("sessions").WHERE((status == "invalid") | (expired == True))  # noqa: E712
-        )
+        query = DELETE().FROM("sessions").WHERE((status == "invalid") | (expired == True))  # noqa: E712
         sql, params = query.placeholder_pair()
         assert 'DELETE FROM "sessions"' in sql
         assert "WHERE" in sql
@@ -135,9 +125,7 @@ class TestDeleteAdvanced:
 
     def test_delete_with_datetime_expression(self):
         """Test DELETE with DATETIME expression"""
-        signup_date, total_purchases, infractions = cols(
-            "signup_date", "total_purchases", "infractions"
-        )
+        signup_date, total_purchases, infractions = cols("signup_date", "total_purchases", "infractions")
         query = (
             DELETE()
             .FROM("customers")

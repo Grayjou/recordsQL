@@ -60,11 +60,7 @@ class TestCountAdvanced:
     def test_count_with_complex_conditions(self):
         """Test COUNT with complex WHERE conditions"""
         age, salary, department = cols("age", "salary", "department")
-        query = (
-            COUNT()
-            .FROM("employees")
-            .WHERE(((age > 30) & (salary > 50000)) | (department == "Executive"))
-        )
+        query = COUNT().FROM("employees").WHERE(((age > 30) & (salary > 50000)) | (department == "Executive"))
         sql, params = query.placeholder_pair()
         assert "SELECT COUNT(*)" in sql
         assert "WHERE" in sql
@@ -74,9 +70,7 @@ class TestCountAdvanced:
 
     def test_count_with_datetime_expression(self):
         """Test COUNT with DATETIME expression"""
-        signup_date, total_purchases, infractions = cols(
-            "signup_date", "total_purchases", "infractions"
-        )
+        signup_date, total_purchases, infractions = cols("signup_date", "total_purchases", "infractions")
         query = (
             COUNT()
             .FROM("customers")
@@ -116,13 +110,7 @@ class TestCountAdvanced:
     def test_count_with_group_by_having(self):
         """Test COUNT with both GROUP BY and HAVING"""
         age, salary = cols("age", "salary")
-        query = (
-            COUNT()
-            .FROM("employees")
-            .WHERE(age > 25)
-            .GROUP_BY("department")
-            .HAVING(salary > 50000)
-        )
+        query = COUNT().FROM("employees").WHERE(age > 25).GROUP_BY("department").HAVING(salary > 50000)
         sql, params = query.placeholder_pair()
         assert "SELECT COUNT(*)" in sql
         assert "WHERE" in sql

@@ -18,11 +18,7 @@ class TestInsertBasic:
 
     def test_insert_multiple_columns(self):
         """Test INSERT with multiple columns"""
-        query = (
-            INSERT("name", "email", "age", "active")
-            .INTO("users")
-            .VALUES("Jane", "jane@example.com", 30, True)
-        )
+        query = INSERT("name", "email", "age", "active").INTO("users").VALUES("Jane", "jane@example.com", 30, True)
         sql, params = query.placeholder_pair()
         assert 'INSERT INTO "users"' in sql
         assert "(name, email, age, active)" in sql
@@ -30,11 +26,7 @@ class TestInsertBasic:
 
     def test_insert_multiple_rows(self):
         """Test INSERT with multiple rows (bulk insert)"""
-        query = (
-            INSERT("name", "age")
-            .INTO("users")
-            .VALUES(("Alice", 28), ("Bob", 32), ("Charlie", 45))
-        )
+        query = INSERT("name", "age").INTO("users").VALUES(("Alice", 28), ("Bob", 32), ("Charlie", 45))
         sql, params = query.placeholder_pair()
         assert 'INSERT INTO "users"' in sql
         assert "(name, age)" in sql
@@ -54,12 +46,7 @@ class TestInsertAdvanced:
 
     def test_insert_with_returning(self):
         """Test INSERT with RETURNING clause"""
-        query = (
-            INSERT("name", "email")
-            .INTO("users")
-            .VALUES("Tom", "tom@example.com")
-            .RETURNING("id", "name", "email")
-        )
+        query = INSERT("name", "email").INTO("users").VALUES("Tom", "tom@example.com").RETURNING("id", "name", "email")
         sql, params = query.placeholder_pair()
         assert 'INSERT INTO "users"' in sql
         assert "RETURNING" in sql
@@ -137,12 +124,7 @@ class TestInsertAdvanced:
 
     def test_insert_bulk_with_returning(self):
         """Test bulk INSERT with RETURNING"""
-        query = (
-            INSERT("name", "age")
-            .INTO("users")
-            .VALUES(("Alice", 25), ("Bob", 30))
-            .RETURNING("id", "name")
-        )
+        query = INSERT("name", "age").INTO("users").VALUES(("Alice", 25), ("Bob", 30)).RETURNING("id", "name")
         sql, params = query.placeholder_pair()
         assert 'INSERT INTO "users"' in sql
         assert "RETURNING" in sql
