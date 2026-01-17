@@ -38,15 +38,22 @@ dependencies = [
     "expressql==1.0.0",
 ]
 
-[project.optional-dependencies]
-tablesqlite = [
-    "tablesqlite>=0.1.8,<0.2.0",
-]
-
 [project.urls]
 homepage = "https://github.com/Grayjou/recordsql"
 repository = "https://github.com/Grayjou/recordsql"
 documentation = "https://github.com/Grayjou/recordsql#readme"
+
+[tool.poetry]
+name = "recordsql"
+version = "0.2.0"
+description = "A Python-based SQL query builder with a fluent and composable interface, built on expressql."
+authors = ["Grayjou <cgrayjou@gmail.com>"]
+readme = "README.md"
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<4.0"
+expressql = "1.0.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.0"
@@ -55,6 +62,9 @@ flake8 = "^6.0"
 sphinx = "^7.0"
 sphinx-rtd-theme = "^2.0"
 sphinx-autodoc-typehints = "^1.25"
+
+[tool.poetry.group.tablesqlite.dependencies]
+tablesqlite = ">=0.1.8,<0.2.0"
 
 [tool.black]
 line-length = 120
