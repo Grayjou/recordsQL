@@ -38,8 +38,10 @@ packages = [{include = "recordsql"}]
 [tool.poetry.dependencies]
 python = ">=3.8.1,<4.0"
 expressql = "^0.3.8"
+tablesqlite = {version = "^0.1.8", optional = true}
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.extras]
+tablesqlite = ["tablesqlite"]
 pytest = "^7.0"
 black = "^23.0"
 flake8 = "^6.0"

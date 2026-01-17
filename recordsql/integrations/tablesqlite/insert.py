@@ -1,4 +1,7 @@
-from tablesqlite import SQLTableInfo
+try:
+    from tablesqlite import SQLTableInfo
+except ImportError:
+    raise ImportError("tablesqlite is required for this integration. Please install it with: pip install recordsql[tablesqlite]")
 from ...query import (
     InsertQuery,
     INSERT,

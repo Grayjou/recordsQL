@@ -1,4 +1,4 @@
-from .expressql import (
+from expressql import (
     SQLCondition,
     no_condition,
     SQLExpression,
@@ -11,6 +11,7 @@ from .expressql import (
     set_expr,
     Func,
 )
+
 
 __all__ = [
     "SQLCondition",
