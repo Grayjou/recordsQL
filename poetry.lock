@@ -915,4 +915,4 @@ tablesqlite = ["tablesqlite"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4.0"
-content-hash = "d39ab201cd3b45cef6fc6e5a0c79693888ea3a2b722675c0796f04144b523203"
+content-hash = "05ac3db8112247a3a9e4219f7fc4ce0fa3689c334ab576a06a329d712e13a3c6"
