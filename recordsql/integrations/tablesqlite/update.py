@@ -7,13 +7,13 @@ from ...query import (
     UPDATE,
 )
 from ...types import SQLCol, SQLInput
-from typing import List
+from typing import List, Dict
 from ...dependencies import SQLCondition, no_condition
 
 
 def update_query_for(
     table: SQLTableInfo,
-    set_clauses: dict[str, SQLInput] = None,
+    set_clauses: Dict[str, SQLInput] = None,
     condition: SQLCondition = no_condition,
     returning: List[SQLCol] = None,
     if_column_exists: bool = True,
@@ -60,7 +60,7 @@ def update_query_for(
 
 def update_query(
     self: SQLTableInfo,
-    set_clauses: dict[str, SQLInput] = None,
+    set_clauses: Dict[str, SQLInput] = None,
     condition: SQLCondition = no_condition,
     returning: List[SQLCol] = None,
     if_column_exists: bool = True,

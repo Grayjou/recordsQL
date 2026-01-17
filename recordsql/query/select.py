@@ -2,7 +2,7 @@ from __future__ import annotations
 from ..raw_querybuilders import build_select_query
 from ..raw_querybuilders import JoinQuery
 from ..raw_querybuilders.formatters import SQLOrderBy, column_string
-from typing import List, Optional, Union, Any, Iterable
+from typing import List, Optional, Union, Any, Iterable, Tuple
 from ..base import RecordQuery
 from ..types import SQLCol
 from ..dependencies import SQLCondition, no_condition, SQLExpression
@@ -245,7 +245,7 @@ class SelectQuery(RecordQuery):
         self.offset = offset
         return self
 
-    def GROUP_BY(self, group_by: Union[SQLCol, list[SQLCol], None] = None):
+    def GROUP_BY(self, group_by: Union[SQLCol, List[SQLCol], None] = None):
         if not isinstance(group_by, (SQLCol, list, tuple)):
             raise TypeError("group_by must be an instance of SQLCol or list")
         self.group_by = group_by
@@ -261,11 +261,11 @@ class SelectQuery(RecordQuery):
     def VALUES(self, *args, **kwargs) -> None:
         raise NotImplementedError("VALUES clause is not applicable for SELECT queries.")
 
-    def _placeholder_pair(self) -> tuple[str, Any]:
+    def _placeholder_pair(self) -> Tuple[str, Any]:
         """
         Returns a placeholder pair for the query.
         Returns:
-            tuple[str, Any]: A tuple containing the query string and parameters.
+            Tuple[str, Any]: A tuple containing the query string and parameters.
         """
         string, params = build_select_query(
             table_name=self.table_name,
@@ -295,13 +295,13 @@ class SelectQuery(RecordQuery):
             params = with_params + params
         return string, params
 
-    def placeholder_pair(self, include_alias: bool = True) -> tuple[str, Any]:
+    def placeholder_pair(self, include_alias: bool = True) -> Tuple[str, Any]:
         """
         Returns a placeholder pair for the query.
         Args:
             include_alias (bool): Whether to include the alias in the placeholder pair.
         Returns:
-            tuple[str, Any]: A tuple containing the query string and parameters.
+            Tuple[str, Any]: A tuple containing the query string and parameters.
         """
         if not self._up_to_date:
             (
@@ -368,14 +368,14 @@ class SelectQuery(RecordQuery):
 
     def copy_with(
         self,
-        columns: Union[SQLCol, list[SQLCol]] = None,
+        columns: Union[SQLCol, List[SQLCol]] = None,
         table_name: str = None,
         condition: SQLCondition = None,
         order_by: Optional[List[SQLOrderBy]] = None,
         criteria: List[str] = None,
         limit: Optional[Union[int, str]] = None,
         offset: Optional[Union[int, str]] = None,
-        group_by: Union[SQLCol, list[SQLCol], None] = None,
+        group_by: Union[SQLCol, List[SQLCol], None] = None,
         having: Optional[SQLCondition] = None,
         joins: Optional[List[JoinQuery]] = None,
         alias: Optional[str] = None,
@@ -384,14 +384,14 @@ class SelectQuery(RecordQuery):
         """
         Creates a copy of the current query with the specified modifications.
         Args:
-            columns (Union[SQLCol, list[SQLCol]], optional): The columns to select. Defaults to None.
+            columns (Union[SQLCol, List[SQLCol]], optional): The columns to select. Defaults to None.
             table_name (str, optional): The name of the table to query. Defaults to None.
             condition (SQLCondition, optional): The condition to apply to the query. Defaults to None.
             order_by (Optional[List[SQLOrderBy]], optional): The column(s) to order the results by. Defaults to None.
             criteria (List[str], optional): The sorting criteria, either "ASC" or "DESC". Defaults to None.
             limit (Optional[Union[int, str]], optional): The maximum number of rows to return. Defaults to None.
             offset (Optional[Union[int, str]], optional): The number of rows to skip before starting to return rows. Defaults to None.
-            group_by (Union[SQLCol, list[SQLCol], None], optional): The column(s) to group the results by. Defaults to None.
+            group_by (Union[SQLCol, List[SQLCol], None], optional): The column(s) to group the results by. Defaults to None.
             having (SQLCondition, optional): The condition to apply to the grouped results. Defaults to None.
         Returns:
             SelectQuery: A new instance of SelectQuery with the specified modifications.
@@ -423,12 +423,12 @@ class SelectQuery(RecordQuery):
 
     @classmethod
     def _SELECT(
-        cls, column_list: Union[SQLCol, list[SQLCol]] = "*", *args: SQLCol, **kwargs
+        cls, column_list: Union[SQLCol, List[SQLCol]] = "*", *args: SQLCol, **kwargs
     ) -> SelectQuery:
         """
         Constructs a SELECT SQL query.
         Args:
-            column_list (Union[SQLCol, list[SQLCol]], optional): A single column,
+            column_list (Union[SQLCol, List[SQLCol]], optional): A single column,
                 a list of columns, or "*" to select all columns. Defaults to "*".
             *args (SQLCol): Additional columns to include in the SELECT query.
         Returns:
@@ -685,7 +685,7 @@ for alias in select_alias:
 
 
 def SELECT(
-    column_list: Union[SQLCol, list[SQLCol]] = "*",
+    column_list: Union[SQLCol, List[SQLCol]] = "*",
     *args: SQLCol,
     ignore_forbidden_characters: bool = False,
     **kwargs: Any,
@@ -738,7 +738,7 @@ class WithQuery:
             validate_name(value, validate_chars=not self.ignore_forbidden_chars)
         self._alias = value
 
-    def placeholder_pair(self, include_with=True) -> tuple[str, Any]:
+    def placeholder_pair(self, include_with=True) -> Tuple[str, Any]:
         alias = self.alias
         if alias is None:
             raise ValueError("Alias must be set for the WithQuery")

@@ -15,7 +15,7 @@ from ...dependencies import SQLCondition
 
 def select_query_for(
     table: SQLTableInfo,
-    columns: Union[str, list[SQLCol]] = "*",
+    columns: Union[str, List[SQLCol]] = "*",
     condition: SQLCondition = None,
     order_by: Optional[List[Any]] = None,
     criteria: List[str] = None,
@@ -46,7 +46,7 @@ def select_query_for(
 
 def select_query(
     self: SQLTableInfo,
-    columns: Union[str, list[SQLCol]] = "*",
+    columns: Union[str, List[SQLCol]] = "*",
     condition: Any = None,
     order_by: Optional[List[Any]] = None,
     criteria: List[str] = None,

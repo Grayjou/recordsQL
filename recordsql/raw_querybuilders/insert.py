@@ -109,7 +109,7 @@ class OnConflictQuery:
     def __init__(
         self,
         do_what: str,
-        conflict_cols: list[str],
+        conflict_cols: List[str],
         set_clauses: Union[List[Tuple], Dict] = None,
         condition: SQLCondition = None,
     ) -> None:

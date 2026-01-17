@@ -1,4 +1,4 @@
-from typing import Tuple, Any
+from typing import Tuple, Any, List
 from .select import build_select_query
 
 
@@ -7,7 +7,7 @@ def build_exists_query(
     condition=None,
     group_by=None,
     having=None,
-) -> Tuple[str, list[Any]]:
+) -> Tuple[str, List[Any]]:
     """
     Builds an EXISTS query.
 
